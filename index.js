@@ -17,7 +17,7 @@ async function showExtensionPath(extensionBlock) {
 
     // Add title
     const title = document.createElement('h3');
-    title.textContent = 'Extension Path';
+    title.textContent = 'Edit Extension';
     title.style.textAlign = 'center';
     title.style.marginBottom = '10px';
 
