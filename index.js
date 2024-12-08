@@ -5,7 +5,7 @@ async function showExtensionPath(extensionBlock) {
     const extensionName = extensionBlock.getAttribute('data-name');
     const context = SillyTavern.getContext();
     const settings = context.extensionSettings[settingsKey];
-    
+
     const basePath = settings.basePath.trim();
     const fullPath = basePath ? `${basePath}${extensionName}` : `extensions/third-party${extensionName}`;
     const ideCommand = settings.ideCommand?.replace('{path}', fullPath) || '';
@@ -24,14 +24,14 @@ async function showExtensionPath(extensionBlock) {
     const pathText = document.createElement('div');
     pathText.textContent = fullPath;
     pathText.classList.add('monospace');
-    
+
     const copyPath = document.createElement('div');
     copyPath.classList.add('menu_button', 'fa-fw', 'fa-solid', 'fa-copy');
     copyPath.title = 'Copy path to clipboard';
     copyPath.addEventListener('click', async () => {
         await navigator.clipboard.writeText(fullPath);
-        copyPath.classList.add('qr--success');
-        setTimeout(() => copyPath.classList.remove('qr--success'), 3000);
+        copyPath.classList.add('emm--success');
+        setTimeout(() => copyPath.classList.remove('emm--success'), 3000);
     });
 
     pathRow.append(pathText, copyPath);
@@ -45,14 +45,14 @@ async function showExtensionPath(extensionBlock) {
     const commandText = document.createElement('div');
     commandText.textContent = ideCommand;
     commandText.classList.add('monospace');
-    
+
     const copyCommand = document.createElement('div');
     copyCommand.classList.add('menu_button', 'fa-fw', 'fa-solid', 'fa-copy');
     copyCommand.title = 'Copy command to clipboard';
     copyCommand.addEventListener('click', async () => {
         await navigator.clipboard.writeText(ideCommand);
-        copyCommand.classList.add('qr--success');
-        setTimeout(() => copyCommand.classList.remove('qr--success'), 3000);
+        copyCommand.classList.add('emm--success');
+        setTimeout(() => copyCommand.classList.remove('emm--success'), 3000);
     });
 
     commandRow.append(commandText, copyCommand);
