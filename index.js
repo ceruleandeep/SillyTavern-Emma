@@ -63,6 +63,7 @@ const EXTENSION_NAME = 'Extension Manager Manager'; // Auto-generated from manif
  * @type {EMMSettings}
  * @typedef {Object} EMMSettings
  * @property {boolean} enabled Whether the extension is enabled
+ * @property {string} basePath The base path for third-party extensions
  */
 const defaultSettings = Object.freeze({
     enabled: true,
@@ -123,7 +124,7 @@ function renderExtensionSettings() {
     const basePathLabel = document.createElement('label');
     basePathLabel.htmlFor = `${settingsKey}-basePath`;
     basePathLabel.textContent = context.t`Extensions Base Path`;
-    
+
     const basePathInput = document.createElement('input');
     basePathInput.type = 'text';
     basePathInput.id = `${settingsKey}-basePath`;
