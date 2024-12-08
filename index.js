@@ -1,5 +1,55 @@
 // noinspection DuplicatedCode
 
+// Utility functions for handling global extensions
+function showExtensionPath(extensionBlock) {
+    const extensionName = extensionBlock.getAttribute('data-name');
+    // TODO: Implement actual path resolution
+    const fullPath = `extensions/third-party${extensionName}`;
+    
+    // TODO: Implement actual popup showing
+    console.log('Would show path:', fullPath);
+}
+
+function addPathButtonsToGlobalExtensions() {
+    // Find all extension blocks that have the global icon
+    const globalExtensions = document.querySelectorAll('.extension_block .fa-server');
+    
+    globalExtensions.forEach(icon => {
+        const extensionBlock = icon.closest('.extension_block');
+        const actionsDiv = extensionBlock.querySelector('.extension_actions');
+        
+        // Check if we already added our button
+        if (actionsDiv && !actionsDiv.querySelector('.btn_path')) {
+            const pathButton = document.createElement('button');
+            pathButton.className = 'btn_path menu_button interactable';
+            pathButton.title = 'Show extension path';
+            pathButton.innerHTML = '<i class="fa-solid fa-folder-open fa-fw"></i>';
+            pathButton.addEventListener('click', () => showExtensionPath(extensionBlock));
+            
+            // Insert before the existing buttons
+            actionsDiv.insertBefore(pathButton, actionsDiv.firstChild);
+        }
+    });
+}
+
+// Set up observer to watch for extensions dialog
+const observer = new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+        if (mutation.addedNodes.length) {
+            const dialog = document.querySelector('dialog[data-id="00ec08c0-112a-44e9-a597-659aca805d32"]');
+            if (dialog) {
+                addPathButtonsToGlobalExtensions();
+            }
+        }
+    }
+});
+
+// Start observing when extension initializes
+observer.observe(document.body, {
+    childList: true,
+    subtree: true
+});
+
 const settingsKey = 'cd-ExtensionManagerManager';
 const EXTENSION_NAME = 'Extension Manager Manager'; // Auto-generated from manifest.json
 
