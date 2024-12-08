@@ -15,6 +15,12 @@ async function showExtensionPath(extensionBlock) {
     container.style.flexDirection = 'column';
     container.style.gap = '10px';
 
+    // Add title
+    const title = document.createElement('h3');
+    title.textContent = 'Extension Path';
+    title.style.textAlign = 'center';
+    title.style.marginBottom = '10px';
+
     // Path row
     const pathRow = document.createElement('div');
     pathRow.style.display = 'flex';
