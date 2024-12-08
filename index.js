@@ -3,14 +3,19 @@
 // Utility functions for handling global extensions
 async function showExtensionPath(extensionBlock) {
     const extensionName = extensionBlock.getAttribute('data-name');
-    const fullPath = `extensions/third-party${extensionName}`;
+    const context = SillyTavern.getContext();
+    const settings = context.extensionSettings[settingsKey];
+    
+    const basePath = settings.basePath.trim();
+    const fullPath = basePath ? `${basePath}${extensionName}` : `extensions/third-party${extensionName}`;
+    const ideCommand = settings.ideCommand?.replace('{path}', fullPath) || '';
 
     const pathTextArea = document.createElement('textarea');
-    pathTextArea.value = fullPath;
+    pathTextArea.value = `Path: ${fullPath}\nCommand: ${ideCommand}`;
     pathTextArea.classList.add('text_pole', 'monospace');
     pathTextArea.readOnly = true;
+    pathTextArea.rows = 2;
 
-    const context = SillyTavern.getContext();
     const popupPromise = context.callGenericPopup(pathTextArea, context.POPUP_TYPE.TEXT);
     pathTextArea.focus();
     await popupPromise;
@@ -68,6 +73,7 @@ const EXTENSION_NAME = 'Extension Manager Manager'; // Auto-generated from manif
 const defaultSettings = Object.freeze({
     enabled: true,
     basePath: '',
+    ideCommand: 'code "{path}"', // Default to VS Code
 });
 
 function renderExtensionSettings() {
@@ -137,6 +143,24 @@ function renderExtensionSettings() {
     });
 
     inlineDrawerContent.append(basePathLabel, basePathInput);
+
+    // IDE command input
+    const ideCommandLabel = document.createElement('label');
+    ideCommandLabel.htmlFor = `${settingsKey}-ideCommand`;
+    ideCommandLabel.textContent = context.t`IDE Command Template`;
+
+    const ideCommandInput = document.createElement('input');
+    ideCommandInput.type = 'text';
+    ideCommandInput.id = `${settingsKey}-ideCommand`;
+    ideCommandInput.classList.add('text_pole');
+    ideCommandInput.value = settings.ideCommand || '';
+    ideCommandInput.placeholder = 'code "{path}"';
+    ideCommandInput.addEventListener('input', () => {
+        settings.ideCommand = ideCommandInput.value;
+        context.saveSettingsDebounced();
+    });
+
+    inlineDrawerContent.append(ideCommandLabel, ideCommandInput);
 }
 
 (function initExtension() {
