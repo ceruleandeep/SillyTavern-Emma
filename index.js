@@ -3,6 +3,7 @@ const unsnake = (/** @type {string} */ str) => str ? str.toLowerCase().replace(/
 const renderElementDebounced = SillyTavern.libs.lodash.debounce(renderElement, 300);
 
 const settingsKey = 'cd-ExtensionManagerManager';
+const EXTENSION_NAME = 'Extension Manager Manager'; // Auto-generated from manifest.json
 
 // read extension name from the extension's manifest.json
 
