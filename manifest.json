@@ -1,0 +1,12 @@
+{
+    "display_name": "Extension Manager Manager",
+    "loading_order": 10,
+    "requires": [],
+    "optional": [],
+    "js": "index.js",
+    "css": "style.css",
+    "author": "ceruleandeep",
+    "version": "1.0.0",
+    "homePage": "https://github.com/ceruleandeep/SillyTavern-ExtensionManagerManager",
+    "auto_update": false
+}
