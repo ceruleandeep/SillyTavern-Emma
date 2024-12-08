@@ -5,19 +5,60 @@ async function showExtensionPath(extensionBlock) {
     const extensionName = extensionBlock.getAttribute('data-name');
     const context = SillyTavern.getContext();
     const settings = context.extensionSettings[settingsKey];
-
+    
     const basePath = settings.basePath.trim();
     const fullPath = basePath ? `${basePath}${extensionName}` : `extensions/third-party${extensionName}`;
     const ideCommand = settings.ideCommand?.replace('{path}', fullPath) || '';
 
-    const pathTextArea = document.createElement('textarea');
-    pathTextArea.value = `Path: ${fullPath}\nCommand: ${ideCommand}`;
-    pathTextArea.classList.add('text_pole', 'monospace');
-    pathTextArea.readOnly = true;
-    pathTextArea.rows = 2;
+    const container = document.createElement('div');
+    container.style.display = 'flex';
+    container.style.flexDirection = 'column';
+    container.style.gap = '10px';
 
-    const popupPromise = context.callGenericPopup(pathTextArea, context.POPUP_TYPE.TEXT);
-    pathTextArea.focus();
+    // Path row
+    const pathRow = document.createElement('div');
+    pathRow.style.display = 'flex';
+    pathRow.style.alignItems = 'center';
+    pathRow.style.gap = '10px';
+
+    const pathText = document.createElement('div');
+    pathText.textContent = fullPath;
+    pathText.classList.add('monospace');
+    
+    const copyPath = document.createElement('div');
+    copyPath.classList.add('menu_button', 'fa-fw', 'fa-solid', 'fa-copy');
+    copyPath.title = 'Copy path to clipboard';
+    copyPath.addEventListener('click', async () => {
+        await navigator.clipboard.writeText(fullPath);
+        copyPath.classList.add('qr--success');
+        setTimeout(() => copyPath.classList.remove('qr--success'), 3000);
+    });
+
+    pathRow.append(pathText, copyPath);
+
+    // Command row
+    const commandRow = document.createElement('div');
+    commandRow.style.display = 'flex';
+    commandRow.style.alignItems = 'center';
+    commandRow.style.gap = '10px';
+
+    const commandText = document.createElement('div');
+    commandText.textContent = ideCommand;
+    commandText.classList.add('monospace');
+    
+    const copyCommand = document.createElement('div');
+    copyCommand.classList.add('menu_button', 'fa-fw', 'fa-solid', 'fa-copy');
+    copyCommand.title = 'Copy command to clipboard';
+    copyCommand.addEventListener('click', async () => {
+        await navigator.clipboard.writeText(ideCommand);
+        copyCommand.classList.add('qr--success');
+        setTimeout(() => copyCommand.classList.remove('qr--success'), 3000);
+    });
+
+    commandRow.append(commandText, copyCommand);
+
+    container.append(pathRow, commandRow);
+    const popupPromise = context.callGenericPopup(container, context.POPUP_TYPE.TEXT);
     await popupPromise;
 }
 
