@@ -107,7 +107,7 @@ function renderExtensionSettings() {
     inlineDrawerToggle.classList.add('inline-drawer-toggle', 'inline-drawer-header');
 
     const extensionName = document.createElement('b');
-    extensionName.textContent = context.t`Inject Manager`;
+    extensionName.textContent = context.t`${EXTENSION_NAME}`;
 
     const inlineDrawerIcon = document.createElement('div');
     inlineDrawerIcon.classList.add('inline-drawer-icon', 'fa-solid', 'fa-circle-chevron-down', 'down');
@@ -316,7 +316,7 @@ function renderSideBarContent() {
     if (!hasAnyInjects) {
         const noInjects = document.createElement('div');
         noInjects.classList.add('sideBarNoInjects');
-        noInjects.textContent = context.t`No injects found.`;
+        noInjects.textContent = context.t`No ${EXTENSION_NAME} items found.`;
         container.append(noInjects);
         return;
     }
