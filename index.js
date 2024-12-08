@@ -108,7 +108,7 @@ observer.observe(document.body, {
     subtree: true,
 });
 
-const settingsKey = 'cd-ExtensionManagerManager';
+const settingsKey = 'sillytavern-extensionsmanagermanager'; // Auto-generated from package.json
 const EXTENSION_NAME = 'Extensions Manager Manager'; // Auto-generated from manifest.json
 
 /**
