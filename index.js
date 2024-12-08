@@ -108,8 +108,7 @@ observer.observe(document.body, {
     subtree: true,
 });
 
-const settingsKey = 'sillytavern-extensionsmanagermanager'; // Auto-generated from package.json
-const EXTENSION_NAME = 'Extensions Manager Manager'; // Auto-generated from manifest.json
+import { settingsKey, EXTENSION_NAME } from './consts.js';
 
 /**
  * @type {EMMSettings}
