@@ -1,13 +1,19 @@
 // noinspection DuplicatedCode
 
 // Utility functions for handling global extensions
-function showExtensionPath(extensionBlock) {
+async function showExtensionPath(extensionBlock) {
     const extensionName = extensionBlock.getAttribute('data-name');
-    // TODO: Implement actual path resolution
     const fullPath = `extensions/third-party${extensionName}`;
     
-    // TODO: Implement actual popup showing
-    console.log('Would show path:', fullPath);
+    const pathTextArea = document.createElement('textarea');
+    pathTextArea.value = fullPath;
+    pathTextArea.classList.add('text_pole', 'monospace');
+    pathTextArea.readOnly = true;
+    
+    const context = SillyTavern.getContext();
+    const popupPromise = context.callGenericPopup(pathTextArea, context.POPUP_TYPE.TEXT);
+    pathTextArea.focus();
+    await popupPromise;
 }
 
 function addPathButtonsToGlobalExtensions() {
