@@ -1,10 +1,10 @@
 const fs = require('fs');
 
 // Read manifest.json and package.json
-const manifest = JSON.parse(fs.readFileSync('manifest.json', 'utf8'));
-const package = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-const displayName = manifest.display_name;
-const packageName = package.name;
+const manifestJson = JSON.parse(fs.readFileSync('manifest.json', 'utf8'));
+const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+const displayName = manifestJson.display_name;
+const packageName = packageJson.name;
 
 // Read index.js
 let indexContent = fs.readFileSync('index.js', 'utf8');
