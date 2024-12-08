@@ -36,8 +36,8 @@ function addPathButtonsToGlobalExtensions() {
 const observer = new MutationObserver((mutations) => {
     for (const mutation of mutations) {
         if (mutation.addedNodes.length) {
-            const dialog = document.querySelector('dialog[data-id="00ec08c0-112a-44e9-a597-659aca805d32"]');
-            if (dialog) {
+            const extensionsInfo = document.querySelector('.extensions_info');
+            if (extensionsInfo) {
                 addPathButtonsToGlobalExtensions();
             }
         }
