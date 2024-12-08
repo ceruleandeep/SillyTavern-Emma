@@ -5,60 +5,6 @@ const renderElementDebounced = SillyTavern.libs.lodash.debounce(renderElement, 3
 const settingsKey = 'cd-ExtensionManagerManager';
 const EXTENSION_NAME = 'Extension Manager Manager'; // Auto-generated from manifest.json
 
-// read extension name from the extension's manifest.json
-
-
-
-const injectRoles = Object.freeze({
-    /** SYSTEM */
-    [0]: '⚙️',
-    /** USER */
-    [1]: '👤',
-    /** ASSISTANT */
-    [2]: '🤖',
-});
-
-const injectPositions = Object.freeze({
-    /** NONE */
-    [-1]: '–',
-    /** AFTER PROMPT */
-    [0]: '↓',
-    /** IN-CHAT */
-    [1]: '@',
-    /** BEFORE PROMPT */
-    [2]: '↑',
-});
-
-const elementPositionClasses = Object.freeze({
-    TOP_LEFT: 'topLeft',
-    TOP_CENTER: 'topCenter',
-    TOP_RIGHT: 'topRight',
-    BOTTOM_LEFT: 'bottomLeft',
-    BOTTOM_CENTER: 'bottomCenter',
-    BOTTOM_RIGHT: 'bottomRight',
-});
-
-const elementZIndexClasses = Object.freeze({
-    BELOW_PANELS: 'belowPanels',
-    ABOVE_PANELS: 'abovePanels',
-});
-
-const elementParentSelectors = Object.freeze({
-    CHAT: '#chat',
-    BODY: 'body',
-});
-
-const elementParentClasses = Object.freeze({
-    [elementParentSelectors.CHAT]: 'parentChat',
-    [elementParentSelectors.BODY]: 'parentBody',
-});
-
-const elementSizeClasses = Object.freeze({
-    SMALL: 'small',
-    NORMAL: 'normal',
-    LARGE: 'large',
-});
-
 /**
  * @type {InjectManagerSettings}
  * @typedef {Object} InjectManagerSettings
