@@ -4,12 +4,12 @@
 async function showExtensionPath(extensionBlock) {
     const extensionName = extensionBlock.getAttribute('data-name');
     const fullPath = `extensions/third-party${extensionName}`;
-    
+
     const pathTextArea = document.createElement('textarea');
     pathTextArea.value = fullPath;
     pathTextArea.classList.add('text_pole', 'monospace');
     pathTextArea.readOnly = true;
-    
+
     const context = SillyTavern.getContext();
     const popupPromise = context.callGenericPopup(pathTextArea, context.POPUP_TYPE.TEXT);
     pathTextArea.focus();
@@ -19,11 +19,11 @@ async function showExtensionPath(extensionBlock) {
 function addPathButtonsToGlobalExtensions() {
     // Find all extension blocks that have the global icon
     const globalExtensions = document.querySelectorAll('.extension_block .fa-server');
-    
+
     globalExtensions.forEach(icon => {
         const extensionBlock = icon.closest('.extension_block');
         const actionsDiv = extensionBlock.querySelector('.extension_actions');
-        
+
         // Check if we already added our button
         if (actionsDiv && !actionsDiv.querySelector('.btn_path')) {
             const pathButton = document.createElement('button');
@@ -31,7 +31,7 @@ function addPathButtonsToGlobalExtensions() {
             pathButton.title = 'Show extension path';
             pathButton.innerHTML = '<i class="fa-solid fa-folder-open fa-fw"></i>';
             pathButton.addEventListener('click', () => showExtensionPath(extensionBlock));
-            
+
             // Insert before the existing buttons
             actionsDiv.insertBefore(pathButton, actionsDiv.firstChild);
         }
@@ -53,7 +53,7 @@ const observer = new MutationObserver((mutations) => {
 // Start observing when extension initializes
 observer.observe(document.body, {
     childList: true,
-    subtree: true
+    subtree: true,
 });
 
 const settingsKey = 'cd-ExtensionManagerManager';
@@ -112,10 +112,32 @@ function renderExtensionSettings() {
         context.saveSettingsDebounced();
         // renderElement(true);
     });
+
     const enabledCheckboxText = document.createElement('span');
     enabledCheckboxText.textContent = context.t`Enabled`;
     enabledCheckboxLabel.append(enabledCheckbox, enabledCheckboxText);
     inlineDrawerContent.append(enabledCheckboxLabel);
+
+    // Base path (TODO)
+    const positionSelectLabel = document.createElement('label');
+    positionSelectLabel.htmlFor = 'injectManagerPosition';
+    positionSelectLabel.textContent = context.t`Element position`;
+    const positionSelect = document.createElement('select');
+    positionSelect.id = 'injectManagerPosition';
+    positionSelect.classList.add('text_pole');
+    positionSelect.addEventListener('change', () => {
+        settings.positionClass = positionSelect.value;
+        context.saveSettingsDebounced();
+    });
+    for (const [key, value] of Object.entries(elementPositionClasses)) {
+        const option = document.createElement('option');
+        option.value = value;
+        option.textContent = context.translate(unsnake(key));
+        positionSelect.append(option);
+    }
+    positionSelect.value = settings.positionClass;
+    inlineDrawerContent.append(positionSelectLabel, positionSelect);
+    // END: Base path (TODO)
 }
 
 (function initExtension() {
