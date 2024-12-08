@@ -8,5 +8,5 @@
     "author": "ceruleandeep",
     "version": "1.0.0",
     "homePage": "https://github.com/ceruleandeep/SillyTavern-ExtensionsManagerManager",
-    "auto_update": false
+    "auto_update": true
 }
