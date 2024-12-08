@@ -66,6 +66,7 @@ const EXTENSION_NAME = 'Extension Manager Manager'; // Auto-generated from manif
  */
 const defaultSettings = Object.freeze({
     enabled: true,
+    basePath: '',
 });
 
 function renderExtensionSettings() {
@@ -118,26 +119,23 @@ function renderExtensionSettings() {
     enabledCheckboxLabel.append(enabledCheckbox, enabledCheckboxText);
     inlineDrawerContent.append(enabledCheckboxLabel);
 
-    // Base path (TODO)
-    const positionSelectLabel = document.createElement('label');
-    positionSelectLabel.htmlFor = 'injectManagerPosition';
-    positionSelectLabel.textContent = context.t`Element position`;
-    const positionSelect = document.createElement('select');
-    positionSelect.id = 'injectManagerPosition';
-    positionSelect.classList.add('text_pole');
-    positionSelect.addEventListener('change', () => {
-        settings.positionClass = positionSelect.value;
+    // Base path input
+    const basePathLabel = document.createElement('label');
+    basePathLabel.htmlFor = `${settingsKey}-basePath`;
+    basePathLabel.textContent = context.t`Extensions Base Path`;
+    
+    const basePathInput = document.createElement('input');
+    basePathInput.type = 'text';
+    basePathInput.id = `${settingsKey}-basePath`;
+    basePathInput.classList.add('text_pole');
+    basePathInput.value = settings.basePath || '';
+    basePathInput.placeholder = '/path/to/SillyTavern/extensions/third-party';
+    basePathInput.addEventListener('input', () => {
+        settings.basePath = basePathInput.value;
         context.saveSettingsDebounced();
     });
-    for (const [key, value] of Object.entries(elementPositionClasses)) {
-        const option = document.createElement('option');
-        option.value = value;
-        option.textContent = context.translate(unsnake(key));
-        positionSelect.append(option);
-    }
-    positionSelect.value = settings.positionClass;
-    inlineDrawerContent.append(positionSelectLabel, positionSelect);
-    // END: Base path (TODO)
+
+    inlineDrawerContent.append(basePathLabel, basePathInput);
 }
 
 (function initExtension() {
