@@ -1,0 +1,18 @@
+@keyframes emm--success {
+  0%,
+  100% {
+    color: var(--SmartThemeBodyColor);
+  }
+  25%,
+  75% {
+    color: #51a351;
+  }
+}
+.emm--success {
+  animation-name: emm--success;
+  animation-duration: 3s;
+  animation-timing-function: linear;
+  animation-delay: 0s;
+  animation-iteration-count: 1;
+}
+/*# sourceMappingURL=style.css.map */
