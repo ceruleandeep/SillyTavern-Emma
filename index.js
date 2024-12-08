@@ -63,7 +63,7 @@ async function showExtensionPath(extensionBlock) {
 
     commandRow.append(commandText, copyCommand);
 
-    container.append(pathRow, commandRow);
+    container.append(title, pathRow, commandRow);
     const popupPromise = context.callGenericPopup(container, context.POPUP_TYPE.TEXT);
     await popupPromise;
 }
@@ -109,7 +109,7 @@ observer.observe(document.body, {
 });
 
 const settingsKey = 'cd-ExtensionManagerManager';
-const EXTENSION_NAME = 'Extension Manager Manager'; // Auto-generated from manifest.json
+const EXTENSION_NAME = 'Extensions Manager Manager'; // Auto-generated from manifest.json
 
 /**
  * @type {EMMSettings}
