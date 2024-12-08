@@ -1,5 +1,5 @@
 {
-    "display_name": "Extension Manager Manager",
+    "display_name": "Extensions Manager Manager",
     "loading_order": 10,
     "requires": [],
     "optional": [],
@@ -7,6 +7,6 @@
     "css": "style.css",
     "author": "ceruleandeep",
     "version": "1.0.0",
-    "homePage": "https://github.com/ceruleandeep/SillyTavern-ExtensionManagerManager",
+    "homePage": "https://github.com/ceruleandeep/SillyTavern-ExtensionsManagerManager",
     "auto_update": false
 }
