@@ -5,7 +5,7 @@ async function showExtensionPath(extensionBlock) {
     const extensionName = extensionBlock.getAttribute('data-name');
     const context = SillyTavern.getContext();
     const settings = context.extensionSettings[settingsKey];
-    
+
     const basePath = settings.basePath.trim();
     const fullPath = basePath ? `${basePath}${extensionName}` : `extensions/third-party${extensionName}`;
     const ideCommand = settings.ideCommand?.replace('{path}', fullPath) || '';
@@ -69,6 +69,7 @@ const EXTENSION_NAME = 'Extension Manager Manager'; // Auto-generated from manif
  * @typedef {Object} EMMSettings
  * @property {boolean} enabled Whether the extension is enabled
  * @property {string} basePath The base path for third-party extensions
+ * @property {string} ideCommand The template for the IDE command
  */
 const defaultSettings = Object.freeze({
     enabled: true,
