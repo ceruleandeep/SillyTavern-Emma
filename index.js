@@ -233,14 +233,6 @@ async function renderExtensionSettings() {
         return;
     }
 
-    // Add New Extension button at the top
-    const newButton = document.createElement('button');
-    newButton.className = 'menu_button btn_new_extension';
-    newButton.style.marginBottom = '10px';
-    newButton.innerHTML = '<i class="fa-solid fa-plus fa-fw"></i> New Extension';
-    newButton.addEventListener('click', showCreateExtensionDialog);
-    settingsContainer.appendChild(newButton);
-
     const inlineDrawer = document.createElement('div');
     inlineDrawer.classList.add('inline-drawer');
     settingsContainer.append(inlineDrawer);
@@ -260,6 +252,15 @@ async function renderExtensionSettings() {
     inlineDrawerContent.classList.add('inline-drawer-content');
 
     inlineDrawer.append(inlineDrawerToggle, inlineDrawerContent);
+
+
+    // Add New Extension button at the top
+    const newButton = document.createElement('div');
+    newButton.className = 'menu_button menu_button_icon btn_new_extension';
+    newButton.style.marginBottom = '10px';
+    newButton.innerHTML = '<i class="fa-solid fa-plus fa-fw"></i> New Extension';
+    newButton.addEventListener('click', showCreateExtensionDialog);
+    inlineDrawerContent.append(newButton);
 
     /** @type {EMMSettings} */
     const settings = context.extensionSettings[settingsKey];
