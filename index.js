@@ -1,5 +1,32 @@
 // noinspection DuplicatedCode
 
+import { settingsKey, EXTENSION_NAME } from './consts.js';
+
+/**
+ * @type {EMMSettings}
+ * @typedef {Object} EMMSettings
+ * @property {boolean} enabled Whether the extension is enabled
+ * @property {string} basePath The base path for third-party extensions
+ * @property {string} editor The default editor to open extensions with
+ */
+const defaultSettings = Object.freeze({
+    enabled: true,
+    basePath: '',
+    editor: 'code', // Default to VS Code
+});
+
+// Set up observer to watch for extensions dialog
+const observer = new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+        if (mutation.addedNodes.length) {
+            const extensionsInfo = document.querySelector('.extensions_info');
+            if (extensionsInfo) {
+                addPathButtonsToGlobalExtensions();
+            }
+        }
+    }
+});
+
 // Utility functions for handling global extensions
 async function showExtensionPath(extensionBlock) {
     const extensionName = extensionBlock.getAttribute('data-name');
@@ -101,56 +128,6 @@ async function showExtensionPath(extensionBlock) {
     await popupPromise;
 }
 
-function addPathButtonsToGlobalExtensions() {
-    const context = SillyTavern.getContext();
-    const settings = context.extensionSettings[settingsKey];
-
-    // Only proceed if extension is enabled
-    if (!settings.enabled) {
-        return;
-    }
-
-    // Find all extension blocks that have the global icon
-    const globalExtensions = document.querySelectorAll('.extension_block .fa-server');
-
-    globalExtensions.forEach(icon => {
-        const extensionBlock = icon.closest('.extension_block');
-        const actionsDiv = extensionBlock.querySelector('.extension_actions');
-
-        // Check if we already added our button
-        if (actionsDiv && !actionsDiv.querySelector('.btn_path')) {
-            const pathButton = document.createElement('button');
-            pathButton.className = 'btn_path menu_button interactable';
-            pathButton.title = 'Open extension';
-            pathButton.innerHTML = '<i class="fa-solid fa-folder-open fa-fw"></i>';
-            pathButton.addEventListener('click', () => showExtensionPath(extensionBlock));
-
-            // Insert before the existing buttons
-            actionsDiv.insertBefore(pathButton, actionsDiv.firstChild);
-        }
-    });
-}
-
-// Set up observer to watch for extensions dialog
-const observer = new MutationObserver((mutations) => {
-    for (const mutation of mutations) {
-        if (mutation.addedNodes.length) {
-            const extensionsInfo = document.querySelector('.extensions_info');
-            if (extensionsInfo) {
-                addPathButtonsToGlobalExtensions();
-            }
-        }
-    }
-});
-
-// Start observing when extension initializes
-observer.observe(document.body, {
-    childList: true,
-    subtree: true,
-});
-
-import { settingsKey, EXTENSION_NAME } from './consts.js';
-
 async function createNewExtension(name, displayName, author) {
     const context = SillyTavern.getContext();
 
@@ -186,6 +163,58 @@ async function createNewExtension(name, displayName, author) {
     } catch (error) {
         console.error('Extension Manager: Failed to create extension', error);
         toastr.error('Failed to create extension');
+    }
+}
+
+function addPathButtonsToGlobalExtensions() {
+    const context = SillyTavern.getContext();
+    const settings = context.extensionSettings[settingsKey];
+
+    // Only proceed if extension is enabled
+    if (!settings.enabled) {
+        return;
+    }
+
+    // Find all extension blocks that have the global icon
+    const globalExtensions = document.querySelectorAll('.extension_block .fa-server');
+
+    globalExtensions.forEach(icon => {
+        const extensionBlock = icon.closest('.extension_block');
+        const actionsDiv = extensionBlock.querySelector('.extension_actions');
+
+        // Check if we already added our button
+        if (actionsDiv && !actionsDiv.querySelector('.btn_path')) {
+            const pathButton = document.createElement('button');
+            pathButton.className = 'btn_path menu_button interactable';
+            pathButton.title = 'Open extension';
+            pathButton.innerHTML = '<i class="fa-solid fa-folder-open fa-fw"></i>';
+            pathButton.addEventListener('click', () => showExtensionPath(extensionBlock));
+
+            // Insert before the existing buttons
+            actionsDiv.insertBefore(pathButton, actionsDiv.firstChild);
+        }
+    });
+}
+
+function updateNewExtensionButton() {
+    const context = SillyTavern.getContext();
+    const settings = context.extensionSettings[settingsKey];
+    const extensionsBlock = document.querySelector('#rm_extensions_block .extensions_block div');
+    const existingButton = document.querySelector('#emm_new_extension_button');
+
+    // Remove existing button if present
+    if (existingButton) {
+        existingButton.remove();
+    }
+
+    // Add button only if extension is enabled
+    if (settings.enabled && extensionsBlock) {
+        const newButton = document.createElement('div');
+        newButton.id = 'emm_new_extension_button';
+        newButton.className = 'menu_button menu_button_icon';
+        newButton.innerHTML = '<i class="fa-solid fa-cube fa-fw"></i><span>New extension</span>';
+        newButton.addEventListener('click', showCreateExtensionDialog);
+        extensionsBlock.appendChild(newButton);
     }
 }
 
@@ -259,19 +288,6 @@ async function showCreateExtensionDialog() {
     }
     await createNewExtension(name, displayName, author);
 }
-
-/**
- * @type {EMMSettings}
- * @typedef {Object} EMMSettings
- * @property {boolean} enabled Whether the extension is enabled
- * @property {string} basePath The base path for third-party extensions
- * @property {string} editor The default editor to open extensions with
- */
-const defaultSettings = Object.freeze({
-    enabled: true,
-    basePath: '',
-    editor: 'code', // Default to VS Code
-});
 
 async function renderExtensionSettings() {
     const context = SillyTavern.getContext();
@@ -410,26 +426,11 @@ async function renderExtensionSettings() {
     });
 
     updateNewExtensionButton();
+
+    // Start observing when extension initializes
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+    });
+
 })();
-
-function updateNewExtensionButton() {
-    const context = SillyTavern.getContext();
-    const settings = context.extensionSettings[settingsKey];
-    const extensionsBlock = document.querySelector('#rm_extensions_block .extensions_block div');
-    const existingButton = document.querySelector('#emm_new_extension_button');
-
-    // Remove existing button if present
-    if (existingButton) {
-        existingButton.remove();
-    }
-
-    // Add button only if extension is enabled
-    if (settings.enabled && extensionsBlock) {
-        const newButton = document.createElement('div');
-        newButton.id = 'emm_new_extension_button';
-        newButton.className = 'menu_button menu_button_icon';
-        newButton.innerHTML = '<i class="fa-solid fa-cube fa-fw"></i><span>New extension</span>';
-        newButton.addEventListener('click', showCreateExtensionDialog);
-        extensionsBlock.appendChild(newButton);
-    }
-}
