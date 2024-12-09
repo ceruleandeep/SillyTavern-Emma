@@ -138,7 +138,7 @@ import { settingsKey, EXTENSION_NAME } from './consts.js';
  * @typedef {Object} EMMSettings
  * @property {boolean} enabled Whether the extension is enabled
  * @property {string} basePath The base path for third-party extensions
- * @property {string} ideCommand The template for the IDE command
+ * @property {string} editor The default editor to open extensions with
  */
 const defaultSettings = Object.freeze({
     enabled: true,
@@ -222,7 +222,7 @@ async function renderExtensionSettings() {
     const editorSelect = document.createElement('select');
     editorSelect.id = `${settingsKey}-editor`;
     editorSelect.classList.add('text_pole');
-    
+
     // Populate editors dropdown
     try {
         const response = await fetch('/api/plugins/emm/editors');
