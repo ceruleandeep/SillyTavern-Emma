@@ -146,7 +146,7 @@ const defaultSettings = Object.freeze({
     editor: 'code', // Default to VS Code
 });
 
-function renderExtensionSettings() {
+async function renderExtensionSettings() {
     const context = SillyTavern.getContext();
     const settingsElementId = `${settingsKey}-settings`;
     const settingsContainer = document.getElementById(settingsElementId) ?? document.getElementById('extensions_settings2');
@@ -269,5 +269,7 @@ function renderExtensionSettings() {
 
     context.saveSettingsDebounced();
 
-    renderExtensionSettings();
+    renderExtensionSettings().catch(error => {
+        console.error('Extension Manager: Failed to render settings', error);
+    });
 })();
