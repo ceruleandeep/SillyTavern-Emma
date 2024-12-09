@@ -193,25 +193,25 @@ async function showCreateExtensionDialog() {
     const input = document.createElement('input');
     input.type = 'text';
     input.classList.add('text_pole');
-    input.placeholder = 'my-new-extension';
+    input.placeholder = 'SillyTavern-MyExtension';
 
     container.append(title, input);
-    
+
     const confirmation = await context.callGenericPopup(container, context.POPUP_TYPE.CONFIRM, '', {
         okButton: 'Create Extension',
-        cancelButton: 'Cancel'
+        cancelButton: 'Cancel',
     });
-    
+
     if (confirmation !== context.POPUP_RESULT.AFFIRMATIVE) {
         return;
     }
-    
+
     const name = input.value.trim();
     if (!name) {
         toastr.warning('Please enter an extension name');
         return;
     }
-    createNewExtension(name);
+    await createNewExtension(name);
 }
 
 /**
@@ -255,15 +255,6 @@ async function renderExtensionSettings() {
 
     inlineDrawer.append(inlineDrawerToggle, inlineDrawerContent);
 
-
-    // Add New Extension button at the top
-    const newButton = document.createElement('div');
-    newButton.className = 'menu_button menu_button_icon btn_new_extension';
-    newButton.style.marginBottom = '10px';
-    newButton.innerHTML = '<i class="fa-solid fa-plus fa-fw"></i> New Extension';
-    newButton.addEventListener('click', showCreateExtensionDialog);
-    inlineDrawerContent.append(newButton);
-
     /** @type {EMMSettings} */
     const settings = context.extensionSettings[settingsKey];
 
@@ -286,23 +277,14 @@ async function renderExtensionSettings() {
     enabledCheckboxLabel.append(enabledCheckbox, enabledCheckboxText);
     inlineDrawerContent.append(enabledCheckboxLabel);
 
-    // Base path input
-    const basePathLabel = document.createElement('label');
-    basePathLabel.htmlFor = `${settingsKey}-basePath`;
-    basePathLabel.textContent = context.t`Extensions Base Path`;
 
-    const basePathInput = document.createElement('input');
-    basePathInput.type = 'text';
-    basePathInput.id = `${settingsKey}-basePath`;
-    basePathInput.classList.add('text_pole');
-    basePathInput.value = settings.basePath || '';
-    basePathInput.placeholder = '/path/to/SillyTavern/extensions/third-party';
-    basePathInput.addEventListener('input', () => {
-        settings.basePath = basePathInput.value;
-        context.saveSettingsDebounced();
-    });
-
-    inlineDrawerContent.append(basePathLabel, basePathInput);
+    // Add New Extension button at the top
+    const newButton = document.createElement('div');
+    newButton.className = 'menu_button menu_button_icon btn_new_extension';
+    newButton.style.marginBottom = '10px';
+    newButton.innerHTML = '<i class="fa-solid fa-plus fa-fw"></i> New Extension';
+    newButton.addEventListener('click', showCreateExtensionDialog);
+    inlineDrawerContent.append(newButton);
 
     // Editor select
     const editorLabel = document.createElement('label');
@@ -342,6 +324,25 @@ async function renderExtensionSettings() {
     });
 
     inlineDrawerContent.append(editorLabel, editorSelect);
+
+    // Base path input
+    const basePathLabel = document.createElement('label');
+    basePathLabel.htmlFor = `${settingsKey}-basePath`;
+    basePathLabel.textContent = context.t`Extensions base path`;
+
+    const basePathInput = document.createElement('input');
+    basePathInput.type = 'text';
+    basePathInput.id = `${settingsKey}-basePath`;
+    basePathInput.classList.add('text_pole');
+    basePathInput.value = settings.basePath || '';
+    basePathInput.placeholder = '/path/to/SillyTavern/extensions/third-party';
+    basePathInput.addEventListener('input', () => {
+        settings.basePath = basePathInput.value;
+        context.saveSettingsDebounced();
+    });
+
+    inlineDrawerContent.append(basePathLabel, basePathInput);
+
 }
 
 (function initExtension() {
