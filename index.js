@@ -425,7 +425,8 @@ async function renderExtensionSettings() {
 
 }
 
-async function initExtension() {
+// Initialize the extension
+(async function initExtension() {
     const context = SillyTavern.getContext();
 
     if (!context.extensionSettings[settingsKey]) {
