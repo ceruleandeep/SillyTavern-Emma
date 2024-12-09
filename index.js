@@ -121,7 +121,7 @@ function addPathButtonsToGlobalExtensions() {
         if (actionsDiv && !actionsDiv.querySelector('.btn_path')) {
             const pathButton = document.createElement('button');
             pathButton.className = 'btn_path menu_button interactable';
-            pathButton.title = 'Show extension path';
+            pathButton.title = 'Open extension';
             pathButton.innerHTML = '<i class="fa-solid fa-folder-open fa-fw"></i>';
             pathButton.addEventListener('click', () => showExtensionPath(extensionBlock));
 
@@ -316,7 +316,7 @@ async function renderExtensionSettings() {
         settings.enabled = enabledCheckbox.checked;
         context.saveSettingsDebounced();
         updateNewExtensionButton();
-        
+
         // Remove path buttons if disabled
         if (!settings.enabled) {
             document.querySelectorAll('.btn_path').forEach(button => button.remove());
