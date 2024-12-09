@@ -26,7 +26,17 @@ async function showExtensionPath(extensionBlock) {
             return;
         }
 
-        // If response wasn't ok, fall through to showing the popup
+        // Try to get error details from response
+        try {
+            const errorData = await response.json();
+            if (errorData.error && errorData.details) {
+                context.toastr.error(`${errorData.error}: ${errorData.details}`);
+            }
+        } catch (parseError) {
+            console.debug('Extension Manager: Failed to parse error response', parseError);
+        }
+
+        // Fall through to showing the popup
     } catch (error) {
         console.debug('Extension Manager: API not available, falling back to popup', error);
         // Fall through to showing the popup
