@@ -177,7 +177,7 @@ async function createNewExtension(extensionName) {
     }
 }
 
-function showCreateExtensionDialog() {
+async function showCreateExtensionDialog() {
     const context = SillyTavern.getContext();
 
     const container = document.createElement('div');
@@ -195,21 +195,23 @@ function showCreateExtensionDialog() {
     input.classList.add('text_pole');
     input.placeholder = 'my-new-extension';
 
-    const button = document.createElement('button');
-    button.classList.add('menu_button');
-    button.textContent = 'Create';
-    button.addEventListener('click', () => {
-        const name = input.value.trim();
-        if (!name) {
-            toastr.warning('Please enter an extension name');
-            return;
-        }
-        createNewExtension(name);
-        context.closePopup();
+    container.append(title, input);
+    
+    const confirmation = await context.callGenericPopup(container, context.POPUP_TYPE.CONFIRM, '', {
+        okButton: 'Create Extension',
+        cancelButton: 'Cancel'
     });
-
-    container.append(title, input, button);
-    context.callGenericPopup(container, context.POPUP_TYPE.TEXT);
+    
+    if (confirmation !== context.POPUP_RESULT.AFFIRMATIVE) {
+        return;
+    }
+    
+    const name = input.value.trim();
+    if (!name) {
+        toastr.warning('Please enter an extension name');
+        return;
+    }
+    createNewExtension(name);
 }
 
 /**
