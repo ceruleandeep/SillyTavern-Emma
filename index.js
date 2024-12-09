@@ -10,6 +10,31 @@ async function showExtensionPath(extensionBlock) {
     const fullPath = basePath ? `${basePath}${extensionName}` : `extensions/third-party${extensionName}`;
     const ideCommand = settings.ideCommand?.replace('{path}', fullPath) || '';
 
+    // Try to use the API endpoint first
+    try {
+        const response = await fetch('/api/plugins/emm/open', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                editor: 'code', // Default to VS Code
+                extensionName: extensionName,
+            }),
+        });
+
+        if (response.ok) {
+            // API call successful, no need to show popup
+            return;
+        }
+        
+        // If response wasn't ok, fall through to showing the popup
+    } catch (error) {
+        console.debug('Extension Manager: API not available, falling back to popup', error);
+        // Fall through to showing the popup
+    }
+
+    // Original popup behavior as fallback
     const container = document.createElement('div');
     container.style.display = 'flex';
     container.style.flexDirection = 'column';
