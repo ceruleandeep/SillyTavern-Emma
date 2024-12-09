@@ -1,6 +1,7 @@
 // noinspection DuplicatedCode
 
 import { settingsKey, EXTENSION_NAME } from './consts.js';
+import { loadExtensionSettings } from '../../../extensions.js';
 
 let apiAvailable = false;
 
@@ -170,9 +171,12 @@ async function createNewExtension(name, displayName, author, email) {
             return;
         }
 
-        toastr.success('Extension created successfully');
-        // Trigger extension list refresh
-        document.querySelector('#extension_settings')?.click();
+        const manifest = await response.json();
+
+        toastr.success(`Extension "${manifest.display_name}" by ${manifest.author} (version ${manifest.version}) has been created successfully!`, 'Extension creation successful');
+        console.debug(`Extension "${manifest.display_name}" has been installed successfully at ${manifest.extensionPath}`);
+        await loadExtensionSettings({}, false, false);
+        await context.eventSource.emit(context.eventTypes.EXTENSION_SETTINGS_LOADED);
     } catch (error) {
         console.error('Extension Manager: Failed to create extension', error);
         toastr.error('Failed to create extension');
