@@ -27,7 +27,7 @@ async function showExtensionPath(extensionBlock) {
             // API call successful, no need to show popup
             return;
         }
-        
+
         // If response wasn't ok, fall through to showing the popup
     } catch (error) {
         console.debug('Extension Manager: API not available, falling back to popup', error);
