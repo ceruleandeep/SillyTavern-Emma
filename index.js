@@ -150,10 +150,10 @@ async function createNewExtension(name, displayName, author) {
         const response = await fetch('/api/plugins/emm/create', {
             method: 'POST',
             headers: context.getRequestHeaders(),
-            body: JSON.stringify({ 
+            body: JSON.stringify({
                 name,
                 display_name: displayName,
-                author
+                author,
             }),
         });
 
@@ -197,7 +197,7 @@ async function showCreateExtensionDialog() {
     const nameInput = document.createElement('input');
     nameInput.type = 'text';
     nameInput.classList.add('text_pole');
-    nameInput.placeholder = 'sillytavern-my-extension';
+    nameInput.placeholder = 'SillyTavern-MyExtension';
 
     const displayNameInput = document.createElement('input');
     displayNameInput.type = 'text';
@@ -221,7 +221,7 @@ async function showCreateExtensionDialog() {
         title,
         nameLabel, nameInput,
         displayNameLabel, displayNameInput,
-        authorLabel, authorInput
+        authorLabel, authorInput,
     );
 
     const confirmation = await context.callGenericPopup(container, context.POPUP_TYPE.CONFIRM, '', {
