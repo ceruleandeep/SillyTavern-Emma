@@ -16,7 +16,7 @@ async function showExtensionPath(extensionBlock) {
             method: 'POST',
             headers: context.getRequestHeaders(),
             body: JSON.stringify({
-                editor: 'webstorm', // Default to VS Code
+                editor: settings.editor || 'code',
                 extensionName: extensionName.replace(/^\//, ''), // Remove leading slash
             }),
         });
@@ -143,7 +143,7 @@ import { settingsKey, EXTENSION_NAME } from './consts.js';
 const defaultSettings = Object.freeze({
     enabled: true,
     basePath: '',
-    ideCommand: 'code "{path}"', // Default to VS Code
+    editor: 'code', // Default to VS Code
 });
 
 function renderExtensionSettings() {
@@ -214,23 +214,44 @@ function renderExtensionSettings() {
 
     inlineDrawerContent.append(basePathLabel, basePathInput);
 
-    // IDE command input
-    const ideCommandLabel = document.createElement('label');
-    ideCommandLabel.htmlFor = `${settingsKey}-ideCommand`;
-    ideCommandLabel.textContent = context.t`IDE Command Template`;
+    // Editor select
+    const editorLabel = document.createElement('label');
+    editorLabel.htmlFor = `${settingsKey}-editor`;
+    editorLabel.textContent = context.t`Editor`;
 
-    const ideCommandInput = document.createElement('input');
-    ideCommandInput.type = 'text';
-    ideCommandInput.id = `${settingsKey}-ideCommand`;
-    ideCommandInput.classList.add('text_pole');
-    ideCommandInput.value = settings.ideCommand || '';
-    ideCommandInput.placeholder = 'code "{path}"';
-    ideCommandInput.addEventListener('input', () => {
-        settings.ideCommand = ideCommandInput.value;
+    const editorSelect = document.createElement('select');
+    editorSelect.id = `${settingsKey}-editor`;
+    editorSelect.classList.add('text_pole');
+    
+    // Populate editors dropdown
+    try {
+        const response = await fetch('/api/plugins/emm/editors');
+        if (response.ok) {
+            const editors = await response.json();
+            editors.forEach(editor => {
+                const option = document.createElement('option');
+                option.value = editor;
+                option.textContent = editor;
+                option.selected = settings.editor === editor;
+                editorSelect.appendChild(option);
+            });
+        }
+    } catch (error) {
+        console.debug('Extension Manager: Failed to fetch editors', error);
+        // Add fallback option
+        const option = document.createElement('option');
+        option.value = 'code';
+        option.textContent = 'code';
+        option.selected = true;
+        editorSelect.appendChild(option);
+    }
+
+    editorSelect.addEventListener('change', () => {
+        settings.editor = editorSelect.value;
         context.saveSettingsDebounced();
     });
 
-    inlineDrawerContent.append(ideCommandLabel, ideCommandInput);
+    inlineDrawerContent.append(editorLabel, editorSelect);
 }
 
 (function initExtension() {
