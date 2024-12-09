@@ -130,16 +130,6 @@ const observer = new MutationObserver((mutations) => {
             const extensionsInfo = document.querySelector('.extensions_info');
             if (extensionsInfo) {
                 addPathButtonsToGlobalExtensions();
-
-                // Add New Extension button if it doesn't exist
-                const header = document.querySelector('#extensions-header');
-                if (header && !header.querySelector('.btn_new_extension')) {
-                    const newButton = document.createElement('button');
-                    newButton.className = 'menu_button btn_new_extension';
-                    newButton.innerHTML = '<i class="fa-solid fa-plus fa-fw"></i> New Extension';
-                    newButton.addEventListener('click', showCreateExtensionDialog);
-                    header.appendChild(newButton);
-                }
             }
         }
     }
@@ -242,6 +232,14 @@ async function renderExtensionSettings() {
     if (!settingsContainer) {
         return;
     }
+
+    // Add New Extension button at the top
+    const newButton = document.createElement('button');
+    newButton.className = 'menu_button btn_new_extension';
+    newButton.style.marginBottom = '10px';
+    newButton.innerHTML = '<i class="fa-solid fa-plus fa-fw"></i> New Extension';
+    newButton.addEventListener('click', showCreateExtensionDialog);
+    settingsContainer.appendChild(newButton);
 
     const inlineDrawer = document.createElement('div');
     inlineDrawer.classList.add('inline-drawer');
