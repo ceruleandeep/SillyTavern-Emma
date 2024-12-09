@@ -30,7 +30,7 @@ async function showExtensionPath(extensionBlock) {
         try {
             const errorData = await response.json();
             if (errorData.error && errorData.details) {
-                context.toastr.error(`${errorData.error}: ${errorData.details}`);
+                toastr.error(`${errorData.error}: ${errorData.details}`);
             }
         } catch (parseError) {
             console.debug('Extension Manager: Failed to parse error response', parseError);
