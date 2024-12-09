@@ -143,14 +143,18 @@ observer.observe(document.body, {
 
 import { settingsKey, EXTENSION_NAME } from './consts.js';
 
-async function createNewExtension(extensionName) {
+async function createNewExtension(name, displayName, author) {
     const context = SillyTavern.getContext();
 
     try {
         const response = await fetch('/api/plugins/emm/create', {
             method: 'POST',
             headers: context.getRequestHeaders(),
-            body: JSON.stringify({ name: extensionName }),
+            body: JSON.stringify({ 
+                name,
+                display_name: displayName,
+                author
+            }),
         });
 
         if (!response.ok) {
@@ -190,12 +194,35 @@ async function showCreateExtensionDialog() {
     title.style.textAlign = 'center';
     title.style.marginBottom = '10px';
 
-    const input = document.createElement('input');
-    input.type = 'text';
-    input.classList.add('text_pole');
-    input.placeholder = 'SillyTavern-MyExtension';
+    const nameInput = document.createElement('input');
+    nameInput.type = 'text';
+    nameInput.classList.add('text_pole');
+    nameInput.placeholder = 'sillytavern-my-extension';
 
-    container.append(title, input);
+    const displayNameInput = document.createElement('input');
+    displayNameInput.type = 'text';
+    displayNameInput.classList.add('text_pole');
+    displayNameInput.placeholder = 'My Extension';
+
+    const authorInput = document.createElement('input');
+    authorInput.type = 'text';
+    authorInput.classList.add('text_pole');
+    authorInput.placeholder = 'Your Name';
+
+    // Labels
+    const nameLabel = document.createElement('label');
+    nameLabel.textContent = 'Extension ID';
+    const displayNameLabel = document.createElement('label');
+    displayNameLabel.textContent = 'Display Name';
+    const authorLabel = document.createElement('label');
+    authorLabel.textContent = 'Author';
+
+    container.append(
+        title,
+        nameLabel, nameInput,
+        displayNameLabel, displayNameInput,
+        authorLabel, authorInput
+    );
 
     const confirmation = await context.callGenericPopup(container, context.POPUP_TYPE.CONFIRM, '', {
         okButton: 'Create Extension',
@@ -206,12 +233,23 @@ async function showCreateExtensionDialog() {
         return;
     }
 
-    const name = input.value.trim();
+    const name = nameInput.value.trim();
+    const displayName = displayNameInput.value.trim();
+    const author = authorInput.value.trim();
+
     if (!name) {
-        toastr.warning('Please enter an extension name');
+        toastr.warning('Please enter an extension ID');
         return;
     }
-    await createNewExtension(name);
+    if (!displayName) {
+        toastr.warning('Please enter a display name');
+        return;
+    }
+    if (!author) {
+        toastr.warning('Please enter an author name');
+        return;
+    }
+    await createNewExtension(name, displayName, author);
 }
 
 /**
