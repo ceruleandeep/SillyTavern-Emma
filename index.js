@@ -26,11 +26,14 @@ const observer = new MutationObserver((mutations) => {
         }
     }
 });
+observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+});
 
-// Utility functions for handling global extensions
 async function openExtensionWithAPI(extensionName, editor) {
     const context = SillyTavern.getContext();
-    
+
     const response = await fetch('/api/plugins/emm/open', {
         method: 'POST',
         headers: context.getRequestHeaders(),
@@ -121,8 +124,6 @@ async function handleOpenExtension(extensionBlock) {
     // Try to use the API endpoint first
     try {
         await openExtensionWithAPI(extensionName, settings.editor);
-        // API call successful, no need to show popup
-        return;
     } catch (error) {
         console.debug('Extension Manager: API not available, falling back to popup', error);
         // Fall through to showing the popup
@@ -428,11 +429,4 @@ async function renderExtensionSettings() {
     });
 
     updateNewExtensionButton();
-
-    // Start observing when extension initializes
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true,
-    });
-
 })();
