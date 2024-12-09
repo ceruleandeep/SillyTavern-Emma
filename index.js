@@ -316,14 +316,6 @@ async function renderExtensionSettings() {
     inlineDrawerContent.append(enabledCheckboxLabel);
 
 
-    // Add New Extension button at the top
-    const newButton = document.createElement('div');
-    newButton.className = 'menu_button menu_button_icon btn_new_extension';
-    newButton.style.marginBottom = '10px';
-    newButton.innerHTML = '<i class="fa-solid fa-plus fa-fw"></i> New Extension';
-    newButton.addEventListener('click', showCreateExtensionDialog);
-    inlineDrawerContent.append(newButton);
-
     // Editor select
     const editorLabel = document.createElement('label');
     editorLabel.htmlFor = `${settingsKey}-editor`;
@@ -401,4 +393,14 @@ async function renderExtensionSettings() {
     renderExtensionSettings().catch(error => {
         console.error('Extension Manager: Failed to render settings', error);
     });
+
+    // Add New Extension button to main extensions block
+    const extensionsBlock = document.querySelector('#rm_extensions_block .extensions_block div');
+    if (extensionsBlock) {
+        const newButton = document.createElement('div');
+        newButton.className = 'menu_button menu_button_icon';
+        newButton.innerHTML = '<i class="fa-solid fa-plus fa-fw"></i><span>New Extension</span>';
+        newButton.addEventListener('click', showCreateExtensionDialog);
+        extensionsBlock.appendChild(newButton);
+    }
 })();
