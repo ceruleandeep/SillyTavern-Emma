@@ -428,7 +428,7 @@ function updateNewExtensionButton() {
         const newButton = document.createElement('div');
         newButton.id = 'emm_new_extension_button';
         newButton.className = 'menu_button menu_button_icon';
-        newButton.innerHTML = '<i class="fa-solid fa-plus fa-fw"></i><span>New Extension</span>';
+        newButton.innerHTML = '<i class="fa-solid fa-cube fa-fw"></i><span>New extension</span>';
         newButton.addEventListener('click', showCreateExtensionDialog);
         extensionsBlock.appendChild(newButton);
     }
