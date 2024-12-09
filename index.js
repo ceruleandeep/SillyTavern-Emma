@@ -307,7 +307,7 @@ async function renderExtensionSettings() {
     enabledCheckbox.addEventListener('change', () => {
         settings.enabled = enabledCheckbox.checked;
         context.saveSettingsDebounced();
-        // renderElement(true);
+        updateNewExtensionButton();
     });
 
     const enabledCheckboxText = document.createElement('span');
@@ -394,13 +394,27 @@ async function renderExtensionSettings() {
         console.error('Extension Manager: Failed to render settings', error);
     });
 
-    // Add New Extension button to main extensions block
+    updateNewExtensionButton();
+})();
+
+function updateNewExtensionButton() {
+    const context = SillyTavern.getContext();
+    const settings = context.extensionSettings[settingsKey];
     const extensionsBlock = document.querySelector('#rm_extensions_block .extensions_block div');
-    if (extensionsBlock) {
+    const existingButton = document.querySelector('#emm_new_extension_button');
+
+    // Remove existing button if present
+    if (existingButton) {
+        existingButton.remove();
+    }
+
+    // Add button only if extension is enabled
+    if (settings.enabled && extensionsBlock) {
         const newButton = document.createElement('div');
+        newButton.id = 'emm_new_extension_button';
         newButton.className = 'menu_button menu_button_icon';
         newButton.innerHTML = '<i class="fa-solid fa-plus fa-fw"></i><span>New Extension</span>';
         newButton.addEventListener('click', showCreateExtensionDialog);
         extensionsBlock.appendChild(newButton);
     }
-})();
+}
