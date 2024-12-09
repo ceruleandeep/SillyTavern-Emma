@@ -102,6 +102,14 @@ async function showExtensionPath(extensionBlock) {
 }
 
 function addPathButtonsToGlobalExtensions() {
+    const context = SillyTavern.getContext();
+    const settings = context.extensionSettings[settingsKey];
+
+    // Only proceed if extension is enabled
+    if (!settings.enabled) {
+        return;
+    }
+
     // Find all extension blocks that have the global icon
     const globalExtensions = document.querySelectorAll('.extension_block .fa-server');
 
@@ -308,6 +316,13 @@ async function renderExtensionSettings() {
         settings.enabled = enabledCheckbox.checked;
         context.saveSettingsDebounced();
         updateNewExtensionButton();
+        
+        // Remove path buttons if disabled
+        if (!settings.enabled) {
+            document.querySelectorAll('.btn_path').forEach(button => button.remove());
+        } else {
+            addPathButtonsToGlobalExtensions();
+        }
     });
 
     const enabledCheckboxText = document.createElement('span');
