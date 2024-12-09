@@ -170,7 +170,7 @@ async function createNewExtension(extensionName) {
 
         toastr.success('Extension created successfully');
         // Trigger extension list refresh
-        document.querySelector('#extension_settings').click();
+        document.querySelector('#extension_settings')?.click();
     } catch (error) {
         console.error('Extension Manager: Failed to create extension', error);
         toastr.error('Failed to create extension');
@@ -205,7 +205,7 @@ function showCreateExtensionDialog() {
             return;
         }
         createNewExtension(name);
-        context.closeGenericPopup();
+        context.closePopup();
     });
 
     container.append(title, input, button);
