@@ -2,6 +2,8 @@
 
 import { settingsKey, EXTENSION_NAME } from './consts.js';
 
+let apiAvailable = false;
+
 /**
  * @type {EMMSettings}
  * @typedef {Object} EMMSettings
@@ -30,6 +32,20 @@ observer.observe(document.body, {
     childList: true,
     subtree: true,
 });
+
+async function checkAPIAvailable() {
+    try {
+        const context = SillyTavern.getContext();
+        const response = await fetch('/api/plugins/emm/probe', {
+            method: 'GET',
+            headers: context.getRequestHeaders(),
+        });
+        return response.status === 204;
+    } catch (error) {
+        console.debug('Extension Manager: API probe failed', error);
+        return false;
+    }
+}
 
 async function openExtensionWithAPI(extensionName, editor) {
     const context = SillyTavern.getContext();
@@ -210,8 +226,8 @@ function updateNewExtensionButton() {
         existingButton.remove();
     }
 
-    // Add button only if extension is enabled
-    if (settings.enabled && extensionsBlock) {
+    // Add button only if extension is enabled and API is available
+    if (settings.enabled && apiAvailable && extensionsBlock) {
         const newButton = document.createElement('div');
         newButton.id = 'emm_new_extension_button';
         newButton.className = 'menu_button menu_button_icon';
@@ -409,7 +425,7 @@ async function renderExtensionSettings() {
 
 }
 
-(function initExtension() {
+async function initExtension() {
     const context = SillyTavern.getContext();
 
     if (!context.extensionSettings[settingsKey]) {
@@ -424,9 +440,15 @@ async function renderExtensionSettings() {
 
     context.saveSettingsDebounced();
 
+    // Check API availability
+    apiAvailable = await checkAPIAvailable();
+    console.debug('Extension Manager: API available:', apiAvailable);
+
     renderExtensionSettings().catch(error => {
         console.error('Extension Manager: Failed to render settings', error);
     });
 
     updateNewExtensionButton();
-})();
+})().catch(error => {
+    console.error('Extension Manager: Initialization failed', error);
+});
