@@ -14,13 +14,10 @@ async function showExtensionPath(extensionBlock) {
     try {
         const response = await fetch('/api/plugins/emm/open', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-            },
+            headers: context.getRequestHeaders(),
             body: JSON.stringify({
-                editor: 'code', // Default to VS Code
-                extensionName: extensionName,
+                editor: 'webstorm', // Default to VS Code
+                extensionName: extensionName.replace(/^\//, ''), // Remove leading slash
             }),
         });
 
