@@ -130,7 +130,7 @@ const observer = new MutationObserver((mutations) => {
             const extensionsInfo = document.querySelector('.extensions_info');
             if (extensionsInfo) {
                 addPathButtonsToGlobalExtensions();
-                
+
                 // Add New Extension button if it doesn't exist
                 const header = document.querySelector('#extensions-header');
                 if (header && !header.querySelector('.btn_new_extension')) {
@@ -155,7 +155,7 @@ import { settingsKey, EXTENSION_NAME } from './consts.js';
 
 async function createNewExtension(extensionName) {
     const context = SillyTavern.getContext();
-    
+
     try {
         const response = await fetch('/api/plugins/emm/create', {
             method: 'POST',
@@ -189,7 +189,7 @@ async function createNewExtension(extensionName) {
 
 function showCreateExtensionDialog() {
     const context = SillyTavern.getContext();
-    
+
     const container = document.createElement('div');
     container.style.display = 'flex';
     container.style.flexDirection = 'column';
