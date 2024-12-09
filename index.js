@@ -28,48 +28,30 @@ const observer = new MutationObserver((mutations) => {
 });
 
 // Utility functions for handling global extensions
-async function showExtensionPath(extensionBlock) {
-    const extensionName = extensionBlock.getAttribute('data-name');
+async function openExtensionWithAPI(extensionName, editor) {
     const context = SillyTavern.getContext();
-    const settings = context.extensionSettings[settingsKey];
+    
+    const response = await fetch('/api/plugins/emm/open', {
+        method: 'POST',
+        headers: context.getRequestHeaders(),
+        body: JSON.stringify({
+            editor: editor || 'code',
+            extensionName: extensionName.replace(/^\//, ''), // Remove leading slash
+        }),
+    });
 
-    const basePath = settings.basePath.trim();
-    const fullPath = basePath ? `${basePath}${extensionName}` : `extensions/third-party${extensionName}`;
-    const ideCommand = settings.ideCommand?.replace('{path}', fullPath) || '';
-
-    // Try to use the API endpoint first
-    try {
-        const response = await fetch('/api/plugins/emm/open', {
-            method: 'POST',
-            headers: context.getRequestHeaders(),
-            body: JSON.stringify({
-                editor: settings.editor || 'code',
-                extensionName: extensionName.replace(/^\//, ''), // Remove leading slash
-            }),
-        });
-
-        if (response.ok) {
-            // API call successful, no need to show popup
-            return;
-        }
-
+    if (!response.ok) {
         // Try to get error details from response
-        try {
-            const errorData = await response.json();
-            if (errorData.error && errorData.details) {
-                toastr.error(`${errorData.error}: ${errorData.details}`);
-            }
-        } catch (parseError) {
-            console.debug('Extension Manager: Failed to parse error response', parseError);
+        const errorData = await response.json();
+        if (errorData.error && errorData.details) {
+            toastr.error(`${errorData.error}: ${errorData.details}`);
         }
-
-        // Fall through to showing the popup
-    } catch (error) {
-        console.debug('Extension Manager: API not available, falling back to popup', error);
-        // Fall through to showing the popup
+        throw new Error('API call failed');
     }
+}
 
-    // Original popup behavior as fallback
+async function showExtensionPathPopup(fullPath, ideCommand) {
+    const context = SillyTavern.getContext();
     const container = document.createElement('div');
     container.style.display = 'flex';
     container.style.flexDirection = 'column';
@@ -124,8 +106,28 @@ async function showExtensionPath(extensionBlock) {
     commandRow.append(commandText, copyCommand);
 
     container.append(title, pathRow, commandRow);
-    const popupPromise = context.callGenericPopup(container, context.POPUP_TYPE.TEXT);
-    await popupPromise;
+    return context.callGenericPopup(container, context.POPUP_TYPE.TEXT);
+}
+
+async function handleOpenExtension(extensionBlock) {
+    const extensionName = extensionBlock.getAttribute('data-name');
+    const context = SillyTavern.getContext();
+    const settings = context.extensionSettings[settingsKey];
+
+    const basePath = settings.basePath.trim();
+    const fullPath = basePath ? `${basePath}${extensionName}` : `extensions/third-party${extensionName}`;
+    const ideCommand = settings.ideCommand?.replace('{path}', fullPath) || '';
+
+    // Try to use the API endpoint first
+    try {
+        await openExtensionWithAPI(extensionName, settings.editor);
+        // API call successful, no need to show popup
+        return;
+    } catch (error) {
+        console.debug('Extension Manager: API not available, falling back to popup', error);
+        // Fall through to showing the popup
+        await showExtensionPathPopup(fullPath, ideCommand);
+    }
 }
 
 async function createNewExtension(name, displayName, author) {
@@ -188,7 +190,7 @@ function addPathButtonsToGlobalExtensions() {
             pathButton.className = 'btn_path menu_button interactable';
             pathButton.title = 'Open extension';
             pathButton.innerHTML = '<i class="fa-solid fa-folder-open fa-fw"></i>';
-            pathButton.addEventListener('click', () => showExtensionPath(extensionBlock));
+            pathButton.addEventListener('click', () => handleOpenExtension(extensionBlock));
 
             // Insert before the existing buttons
             actionsDiv.insertBefore(pathButton, actionsDiv.firstChild);
