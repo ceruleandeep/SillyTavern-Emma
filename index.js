@@ -130,6 +130,16 @@ const observer = new MutationObserver((mutations) => {
             const extensionsInfo = document.querySelector('.extensions_info');
             if (extensionsInfo) {
                 addPathButtonsToGlobalExtensions();
+                
+                // Add New Extension button if it doesn't exist
+                const header = document.querySelector('#extensions-header');
+                if (header && !header.querySelector('.btn_new_extension')) {
+                    const newButton = document.createElement('button');
+                    newButton.className = 'menu_button btn_new_extension';
+                    newButton.innerHTML = '<i class="fa-solid fa-plus fa-fw"></i> New Extension';
+                    newButton.addEventListener('click', showCreateExtensionDialog);
+                    header.appendChild(newButton);
+                }
             }
         }
     }
@@ -142,6 +152,75 @@ observer.observe(document.body, {
 });
 
 import { settingsKey, EXTENSION_NAME } from './consts.js';
+
+async function createNewExtension(extensionName) {
+    const context = SillyTavern.getContext();
+    
+    try {
+        const response = await fetch('/api/plugins/emm/create', {
+            method: 'POST',
+            headers: context.getRequestHeaders(),
+            body: JSON.stringify({ name: extensionName }),
+        });
+
+        if (!response.ok) {
+            // Try to get error details from response
+            try {
+                const errorData = await response.json();
+                if (errorData.error) {
+                    toastr.error(errorData.error);
+                    return;
+                }
+            } catch (parseError) {
+                console.debug('Extension Manager: Failed to parse error response', parseError);
+            }
+            toastr.error('Failed to create extension');
+            return;
+        }
+
+        toastr.success('Extension created successfully');
+        // Trigger extension list refresh
+        document.querySelector('#extension_settings').click();
+    } catch (error) {
+        console.error('Extension Manager: Failed to create extension', error);
+        toastr.error('Failed to create extension');
+    }
+}
+
+function showCreateExtensionDialog() {
+    const context = SillyTavern.getContext();
+    
+    const container = document.createElement('div');
+    container.style.display = 'flex';
+    container.style.flexDirection = 'column';
+    container.style.gap = '10px';
+
+    const title = document.createElement('h3');
+    title.textContent = 'Create New Extension';
+    title.style.textAlign = 'center';
+    title.style.marginBottom = '10px';
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.classList.add('text_pole');
+    input.placeholder = 'my-new-extension';
+
+    const button = document.createElement('button');
+    button.classList.add('menu_button');
+    button.textContent = 'Create';
+    button.addEventListener('click', () => {
+        const name = input.value.trim();
+        if (!name) {
+            toastr.warning('Please enter an extension name');
+            return;
+        }
+        createNewExtension(name);
+        context.closeGenericPopup();
+    });
+
+    container.append(title, input, button);
+    context.callGenericPopup(container, context.POPUP_TYPE.TEXT);
+}
 
 /**
  * @type {EMMSettings}
