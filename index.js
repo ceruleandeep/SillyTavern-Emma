@@ -72,21 +72,16 @@ async function openExtensionWithAPI(extensionName, editor) {
 async function showExtensionPathPopup(fullPath, ideCommand) {
     const context = SillyTavern.getContext();
     const container = document.createElement('div');
-    container.style.display = 'flex';
-    container.style.flexDirection = 'column';
-    container.style.gap = '10px';
+    container.classList.add('emm--container');
 
     // Add title
     const title = document.createElement('h3');
     title.textContent = 'Edit Extension';
-    title.style.textAlign = 'center';
-    title.style.marginBottom = '10px';
+    title.classList.add('emm--title');
 
     // Path row
     const pathRow = document.createElement('div');
-    pathRow.style.display = 'flex';
-    pathRow.style.alignItems = 'center';
-    pathRow.style.gap = '10px';
+    pathRow.classList.add('emm--row');
 
     const pathText = document.createElement('div');
     pathText.textContent = fullPath;
@@ -105,9 +100,7 @@ async function showExtensionPathPopup(fullPath, ideCommand) {
 
     // Command row
     const commandRow = document.createElement('div');
-    commandRow.style.display = 'flex';
-    commandRow.style.alignItems = 'center';
-    commandRow.style.gap = '10px';
+    commandRow.classList.add('emm--row');
 
     const commandText = document.createElement('div');
     commandText.textContent = ideCommand;
@@ -241,14 +234,11 @@ async function showCreateExtensionDialog() {
     const context = SillyTavern.getContext();
 
     const container = document.createElement('div');
-    container.style.display = 'flex';
-    container.style.flexDirection = 'column';
-    container.style.gap = '10px';
+    container.classList.add('emm--container');
 
     const title = document.createElement('h3');
     title.textContent = 'Create New Extension';
-    title.style.textAlign = 'center';
-    title.style.marginBottom = '10px';
+    title.classList.add('emm--title');
 
     const nameInput = document.createElement('input');
     nameInput.type = 'text';

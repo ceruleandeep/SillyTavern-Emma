@@ -1,15 +1,31 @@
-@keyframes emm--success {
-    0%, 100% {
-        color: var(--SmartThemeBodyColor);
+.emm {
+    &--container {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
     }
-    25%, 75% {
-        color: rgb(81, 163, 81);
+
+    &--title {
+        text-align: center;
+        margin-bottom: 10px;
     }
-}
-&.emm--success {
-    animation-name: emm--success;
-    animation-duration: 3s;
-    animation-timing-function: linear;
-    animation-delay: 0s;
-    animation-iteration-count: 1;
+
+    &--row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    @keyframes success {
+        0%, 100% {
+            color: var(--SmartThemeBodyColor);
+        }
+        25%, 75% {
+            color: rgb(81, 163, 81);
+        }
+    }
+
+    &--success {
+        animation: success 3s linear;
+    }
 }
