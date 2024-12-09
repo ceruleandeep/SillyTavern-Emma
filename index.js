@@ -140,7 +140,7 @@ async function handleOpenExtension(extensionBlock) {
     }
 }
 
-async function createNewExtension(name, displayName, author) {
+async function createNewExtension(name, displayName, author, email) {
     const context = SillyTavern.getContext();
 
     try {
@@ -151,6 +151,7 @@ async function createNewExtension(name, displayName, author) {
                 name,
                 display_name: displayName,
                 author,
+                email,
             }),
         });
 
@@ -255,6 +256,11 @@ async function showCreateExtensionDialog() {
     authorInput.classList.add('text_pole');
     authorInput.placeholder = 'Your Name';
 
+    const emailInput = document.createElement('input');
+    emailInput.type = 'email';
+    emailInput.classList.add('text_pole');
+    emailInput.placeholder = 'your.email@example.com (optional)';
+
     // Labels
     const nameLabel = document.createElement('label');
     nameLabel.textContent = 'Extension ID';
@@ -262,12 +268,15 @@ async function showCreateExtensionDialog() {
     displayNameLabel.textContent = 'Display Name';
     const authorLabel = document.createElement('label');
     authorLabel.textContent = 'Author';
+    const emailLabel = document.createElement('label');
+    emailLabel.textContent = 'Email (optional)';
 
     container.append(
         title,
         nameLabel, nameInput,
         displayNameLabel, displayNameInput,
         authorLabel, authorInput,
+        emailLabel, emailInput,
     );
 
     const confirmation = await context.callGenericPopup(container, context.POPUP_TYPE.CONFIRM, '', {
@@ -295,7 +304,8 @@ async function showCreateExtensionDialog() {
         toastr.warning('Please enter an author name');
         return;
     }
-    await createNewExtension(name, displayName, author);
+    const email = emailInput.value.trim();
+    await createNewExtension(name, displayName, author, email);
 }
 
 async function renderExtensionSettings() {
