@@ -1,6 +1,9 @@
 import { sortExtensionsByName } from '../utils/sort.js';
+import { settingsKey, SORT_OPTIONS } from '../consts.js';
 
 export function createSortControls() {
+    const context = SillyTavern.getContext();
+    const settings = context.extensionSettings[settingsKey];
     const container = document.createElement('div');
     container.classList.add('emm--sort-controls');
 
@@ -21,7 +24,13 @@ export function createSortControls() {
         select.appendChild(option);
     });
 
+    // Set initial value from settings
+    select.value = settings.sortOrder || SORT_OPTIONS.LOAD_ORDER;
+
     select.addEventListener('change', () => {
+        // Save the new sort order
+        settings.sortOrder = select.value;
+        context.saveSettingsDebounced();
         const extensionsContainer = container.closest('.marginBot10');
         if (!extensionsContainer) return;
 

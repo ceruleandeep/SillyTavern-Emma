@@ -17,6 +17,7 @@ const defaultSettings = Object.freeze({
     enabled: true,
     basePath: '',
     editor: 'code', // Default to VS Code
+    sortOrder: 'load', // Default to load order
 });
 
 // Set up observer to watch for extensions dialog
