@@ -29,6 +29,9 @@ export function addSortControls() {
     const installedSection = sections[1];
     if (!installedSection) return;
 
+    // Check if sort controls already exist
+    if (installedSection.querySelector('.emm--sort-controls')) return;
+
     // Find the first extension block to insert before
     const firstExtension = installedSection.querySelector('.extension_block');
     if (!firstExtension) return;

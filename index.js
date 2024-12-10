@@ -22,12 +22,22 @@ const defaultSettings = Object.freeze({
 // Set up observer to watch for extensions dialog
 const observer = new MutationObserver((mutations) => {
     for (const mutation of mutations) {
-        if (mutation.addedNodes.length) {
-            const extensionsInfo = document.querySelector('.extensions_info');
+        // Only look for added nodes that could be the extensions dialog
+        const addedDialog = Array.from(mutation.addedNodes).find(node => 
+            node.nodeType === Node.ELEMENT_NODE && 
+            (node.classList?.contains('extensions_info') || node.querySelector?.('.extensions_info'))
+        );
+        
+        if (addedDialog) {
+            const extensionsInfo = addedDialog.classList?.contains('extensions_info') ? 
+                addedDialog : 
+                addedDialog.querySelector('.extensions_info');
+                
             if (extensionsInfo) {
                 addPathButtonsToGlobalExtensions();
                 addSortControls();
             }
+            break; // Found what we're looking for, no need to continue
         }
     }
 });
