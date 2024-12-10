@@ -1,3 +1,5 @@
+// noinspection ES6ConvertRequireIntoImport
+// eslint-disable-next-line no-undef
 const fs = require('fs');
 
 // Read manifest.json and package.json
