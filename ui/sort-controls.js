@@ -11,7 +11,7 @@ export function createSortControls() {
     select.classList.add('text_pole');
 
     const options = [
-        { value: 'load', text: 'Load Order' },
+        { value: 'load', text: 'Original Order' },
         { value: 'display', text: 'Display Name' },
         { value: 'name', text: 'Internal Name' },
         { value: 'type', text: 'Local/Global' },
@@ -33,15 +33,22 @@ export function createSortControls() {
         if (!extensionsContainer) return;
 
         const extensions = Array.from(extensionsContainer.querySelectorAll('.extension_block'));
+        
+        // Add original order index if not already present
+        extensions.forEach((ext, index) => {
+            if (!ext.hasAttribute('data-original-order')) {
+                ext.setAttribute('data-original-order', index);
+            }
+        });
         const parent = extensions[0]?.parentElement;
         if (!parent) return;
 
         extensions.sort((a, b) => {
             switch (select.value) {
                 case 'load':
-                    const loadOrderA = parseInt(a.dataset.loadOrder) || 0;
-                    const loadOrderB = parseInt(b.dataset.loadOrder) || 0;
-                    return loadOrderA === loadOrderB ? sortExtensionsByName(a, b) : loadOrderA - loadOrderB;
+                    const orderA = parseInt(a.dataset.originalOrder) || 0;
+                    const orderB = parseInt(b.dataset.originalOrder) || 0;
+                    return orderA - orderB;
                 case 'display':
                     return sortExtensionsByName(a, b);
                 case 'name':
