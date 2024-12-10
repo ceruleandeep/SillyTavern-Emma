@@ -45,7 +45,7 @@ export function createSortControls() {
                 case 'type':
                     const aGlobal = !!a.querySelector('.fa-server');
                     const bGlobal = !!b.querySelector('.fa-server');
-                    return aGlobal === bGlobal ? sortExtensionsByName(a, b) : (aGlobal ? 1 : -1);
+                    return aGlobal === bGlobal ? sortExtensionsByName(a, b) : (aGlobal ? -1 : 1);
                 case 'enabled':
                     return sortExtensionsByEnabled(a, b);
                 default:
