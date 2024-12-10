@@ -34,8 +34,8 @@ export function sortExtensionsByEnabled(a, b) {
  * @returns {number} Sort order
  */
 export function sortExtensionsByUpdate(a, b) {
-    const updateA = !!a.querySelector('.extension_update_button');
-    const updateB = !!b.querySelector('.extension_update_button');
+    const updateA = !!a.querySelector('.update_available');
+    const updateB = !!b.querySelector('.update_available');
 
     if (updateA === updateB) {
         return sortExtensionsByName(a, b);
