@@ -70,7 +70,7 @@ export async function createNewExtension(name, displayName, author, email) {
 
         toastr.success(`Extension "${manifest.display_name}" by ${manifest.author} (version ${manifest.version}) has been created successfully!`, 'Extension creation successful');
         console.debug(`Extension "${manifest.display_name}" has been installed successfully at ${manifest.extensionPath}`);
-        
+
         return manifest;
     } catch (error) {
         console.error('Extension Manager: Failed to create extension', error);

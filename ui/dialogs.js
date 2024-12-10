@@ -1,9 +1,8 @@
-import { getContext } from '../../../../extensions.js';
 import { openExtensionWithAPI, createNewExtension } from '../api.js';
 import { loadExtensionSettings } from '../../../../extensions.js';
 
 export async function showExtensionPathPopup(fullPath, ideCommand) {
-    const context = getContext();
+    const context = SillyTavern.getContext();
     const container = document.createElement('div');
     container.classList.add('emm--container');
 
@@ -47,12 +46,12 @@ export async function showExtensionPathPopup(fullPath, ideCommand) {
 
     commandRow.append(commandText, copyCommand);
     container.append(title, pathRow, commandRow);
-    
+
     return context.callGenericPopup(container, context.POPUP_TYPE.TEXT);
 }
 
 export async function showCreateExtensionDialog() {
-    const context = getContext();
+    const context = SillyTavern.getContext();
 
     const container = document.createElement('div');
     container.classList.add('emm--container');
@@ -126,7 +125,7 @@ export async function showCreateExtensionDialog() {
 
     const email = emailInput.value.trim();
     const manifest = await createNewExtension(name, displayName, author, email);
-    
+
     if (manifest) {
         await loadExtensionSettings({}, false, false);
         await context.eventSource.emit(context.eventTypes.EXTENSION_SETTINGS_LOADED);
