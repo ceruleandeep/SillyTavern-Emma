@@ -1,5 +1,5 @@
-import { showExtensionPathPopup } from './dialogs.js';
-import { openExtensionWithAPI } from '../api.js';
+import { showCreateExtensionDialog, showExtensionPathPopup } from './dialogs.js';
+import { openExtensionWithAPI, checkAPIAvailable } from '../api.js';
 import { settingsKey } from '../consts.js';
 import { createSortControls } from './sort-controls.js';
 
@@ -65,4 +65,24 @@ export function addPathButtonsToGlobalExtensions() {
             actionsDiv.insertBefore(pathButton, actionsDiv.firstChild);
         }
     });
+}
+
+export function updateNewExtensionButton() {
+    const context = SillyTavern.getContext();
+    const settings = context.extensionSettings[settingsKey];
+    const extensionsBlock = document.querySelector('#rm_extensions_block .extensions_block div');
+    const existingButton = document.querySelector('#emm_new_extension_button');
+
+    if (existingButton) {
+        existingButton.remove();
+    }
+
+    if (settings.enabled && checkAPIAvailable() && extensionsBlock) {
+        const newButton = document.createElement('div');
+        newButton.id = 'emm_new_extension_button';
+        newButton.className = 'menu_button menu_button_icon';
+        newButton.innerHTML = '<i class="fa-solid fa-cube fa-fw"></i><span>New extension</span>';
+        newButton.addEventListener('click', showCreateExtensionDialog);
+        extensionsBlock.appendChild(newButton);
+    }
 }
