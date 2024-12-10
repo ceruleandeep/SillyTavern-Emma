@@ -6,6 +6,7 @@ const SORT_OPTIONS = {
     DISPLAY_NAME: 'display',
     INTERNAL_NAME: 'name',
     TYPE: 'type',
+    ENABLED: 'enabled',
 };
 
 export { settingsKey, EXTENSION_NAME, SORT_OPTIONS };

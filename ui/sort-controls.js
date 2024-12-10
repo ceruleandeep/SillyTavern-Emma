@@ -1,4 +1,4 @@
-import { sortExtensionsByName } from '../utils/sort.js';
+import { sortExtensionsByName, sortExtensionsByEnabled } from '../utils/sort.js';
 import { settingsKey, SORT_OPTIONS } from '../consts.js';
 
 export function createSortControls() {
@@ -15,6 +15,7 @@ export function createSortControls() {
         { value: 'display', text: 'Display Name' },
         { value: 'name', text: 'Internal Name' },
         { value: 'type', text: 'Local/Global' },
+        { value: 'enabled', text: 'Enabled/Disabled' },
     ];
 
     options.forEach(opt => {
@@ -45,6 +46,8 @@ export function createSortControls() {
                     const aGlobal = !!a.querySelector('.fa-server');
                     const bGlobal = !!b.querySelector('.fa-server');
                     return aGlobal === bGlobal ? sortExtensionsByName(a, b) : (aGlobal ? 1 : -1);
+                case 'enabled':
+                    return sortExtensionsByEnabled(a, b);
                 default:
                     return 0; // Keep original order
             }
