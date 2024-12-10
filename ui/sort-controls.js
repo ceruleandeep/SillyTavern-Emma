@@ -27,10 +27,7 @@ export function createSortControls() {
     // Set initial value from settings
     select.value = settings.sortOrder || SORT_OPTIONS.LOAD_ORDER;
 
-    select.addEventListener('change', () => {
-        // Save the new sort order
-        settings.sortOrder = select.value;
-        context.saveSettingsDebounced();
+    const applySort = () => {
         const extensionsContainer = container.closest('.marginBot10');
         if (!extensionsContainer) return;
 
@@ -56,6 +53,16 @@ export function createSortControls() {
         // Clear and re-append in new order
         extensions.forEach(ext => ext.remove());
         extensions.forEach(ext => parent.appendChild(ext));
+    };
+
+    // Apply initial sort
+    setTimeout(() => applySort(), 0);
+
+    select.addEventListener('change', () => {
+        // Save the new sort order
+        settings.sortOrder = select.value;
+        context.saveSettingsDebounced();
+        applySort();
     });
 
     const label = document.createElement('label');
