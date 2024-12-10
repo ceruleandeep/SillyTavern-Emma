@@ -38,6 +38,10 @@ export function createSortControls() {
 
         extensions.sort((a, b) => {
             switch (select.value) {
+                case 'load':
+                    const loadOrderA = parseInt(a.dataset.loadOrder) || 0;
+                    const loadOrderB = parseInt(b.dataset.loadOrder) || 0;
+                    return loadOrderA === loadOrderB ? sortExtensionsByName(a, b) : loadOrderA - loadOrderB;
                 case 'display':
                     return sortExtensionsByName(a, b);
                 case 'name':
