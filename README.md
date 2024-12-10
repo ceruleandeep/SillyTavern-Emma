@@ -2,25 +2,39 @@
 
 Helper for local development of SillyTavern extensions.
 
+Create new [UI extensions](https://docs.sillytavern.app/for-contributors/writing-extensions) from SillyTavern and open in your code editor for editing. Breaking your user interface has never been easier!
+
 ## Real features
 
-* Open the extension for editing in your IDE with a single click! And then 4 more clicks and a paste.
+* Create a new local extension
+* Open the extension for editing in your IDE with a single click!
+* Sort the installed extensions list
 
 ## Imaginary features
 
-* Create a new local extension
-* Convert local-only extensions to distributable, updatable extensions
-* Convert shallow git clones of installed extensions to full editable copies
-* Clone a starter template for a new extension
-* Configure the extension's manifest
-* Sort and filter the list of extensions
-* Extension tagging and categorisation
-* Button to prompt Coding Sensei to write the extension for you
+* ~~Clone a starter template for a new extension~~
+* ~~Convert local-only extensions to distributable, updatable extensions~~
+* ~~Convert shallow git clones of installed extensions to full editable copies~~
+* ~~Configure the extension's manifest~~
+* ~~Extension tagging and categorisation~~
+* ~~Button to prompt Coding Sensei to just write the extension for you~~
+
+## Configuration
+
+* Editor: the command to run your IDE with the correct arguments to open the extension's directory. Currently available: `webstorm`, `code`, `open`.
+* Extensions Base Path: the path to the `scripts/extensions/third-party` directory in your SillyTavern installation. Only used for the "no auto-open" fallback.
 
 ## Usage
 
-From Extensions Manager, click the folder icon next to the extension you want to edit. 
-Click the copy icon to copy the path or IDE opener command to the clipboard.
+* New extension: Click the "[Cube] New extension" button in the Extensions panel. Fill in the form:
+  * Extension ID: the name of the extension's directory.
+  * Display Name: the name of the extension as shown in the Extensions panel, for `display_name` in the [manifest](https://docs.sillytavern.app/for-contributors/writing-extensions/#manifestjson).
+  * Author: your name or handle, for `author` in the manifest and `user.name` in git.
+  * Email (optional): your contact email, if any, for `author` in the manifest and `user.email` in git.
+* Edit extension: Click "[Cubes] Manage extensions" in the Extensions panel, then click the folder icon next to the extension you want to edit.
+  * Auto-open: will run the IDE command to open the extension in your IDE.
+  * No auto-open: will open a dialog with the path and IDE command to copy.
+* Sort extensions: Click "[Cubes] Manage extensions" in the Extensions panel, then use the dropdown to sort as desired.
 
 ## Requirements
 
@@ -33,6 +47,9 @@ Use this URL with the [extension installer](https://docs.sillytavern.app/extensi
 ```
 https://github.com/ceruleandeep/SillyTavern-ExtensionsManagerManager
 ```
+
+Creating new extensions and single-click editing requires the [server plugin](https://github.com/ceruleandeep/SillyTavern-ExtensionsManagerManager-Plugin)
+to [also be installed](https://docs.sillytavern.app/for-contributors/server-plugins/).
 
 ## Configuration options
 
