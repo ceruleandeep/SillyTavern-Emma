@@ -2,7 +2,11 @@
 
 Helper for local development of SillyTavern extensions.
 
+<img width="400" alt="manage-and-new" src="https://github.com/user-attachments/assets/aaa7698e-14e7-461d-b955-3a7f9b0bfcf0">
+
 Create new [UI extensions](https://docs.sillytavern.app/for-contributors/writing-extensions) from SillyTavern and open in your code editor for editing. Breaking your user interface has never been easier!
+
+<img width="400" alt="create-new-extension" src="https://github.com/user-attachments/assets/df548841-b042-4692-8ad3-d49142447928">
 
 ## Real features
 
@@ -24,6 +28,8 @@ Create new [UI extensions](https://docs.sillytavern.app/for-contributors/writing
 * Editor: the command to run your IDE with the correct arguments to open the extension's directory. Currently available: `webstorm`, `code`, `open`.
 * Extensions Base Path: the path to the `scripts/extensions/third-party` directory in your SillyTavern installation. Only used for the "no auto-open" fallback.
 
+<img width="400" alt="emma-config" src="https://github.com/user-attachments/assets/70a5aa8a-4932-492c-98d0-28c38dedd2ed">
+
 ## Usage
 
 * New extension: Click the "[Cube] New extension" button in the Extensions panel. Fill in the form:
@@ -35,6 +41,8 @@ Create new [UI extensions](https://docs.sillytavern.app/for-contributors/writing
   * Auto-open: will run the IDE command to open the extension in your IDE.
   * No auto-open: will open a dialog with the path and IDE command to copy.
 * Sort extensions: Click "[Cubes] Manage extensions" in the Extensions panel, then use the dropdown to sort as desired.
+
+<img width="400" alt="installed-extensions" src="https://github.com/user-attachments/assets/ce824a1d-c196-4f86-a85a-a92c3487a169">
 
 ## Requirements
 
