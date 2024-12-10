@@ -1,8 +1,7 @@
 import { settingsKey } from './consts.js';
 import { checkAPIAvailable } from './api.js';
 import { renderExtensionSettings } from './ui/settings.js';
-import { addPathButtonsToGlobalExtensions, addSortControls } from './ui/controls.js';
-import { showCreateExtensionDialog } from './ui/dialogs.js';
+import { addPathButtonsToGlobalExtensions, addSortControls, updateNewExtensionButton } from './ui/controls.js';
 
 let apiAvailable = false;
 
@@ -46,26 +45,6 @@ observer.observe(document.body, {
     childList: true,
     subtree: true,
 });
-
-function updateNewExtensionButton() {
-    const context = SillyTavern.getContext();
-    const settings = context.extensionSettings[settingsKey];
-    const extensionsBlock = document.querySelector('#rm_extensions_block .extensions_block div');
-    const existingButton = document.querySelector('#emm_new_extension_button');
-
-    if (existingButton) {
-        existingButton.remove();
-    }
-
-    if (settings.enabled && apiAvailable && extensionsBlock) {
-        const newButton = document.createElement('div');
-        newButton.id = 'emm_new_extension_button';
-        newButton.className = 'menu_button menu_button_icon';
-        newButton.innerHTML = '<i class="fa-solid fa-cube fa-fw"></i><span>New extension</span>';
-        newButton.addEventListener('click', showCreateExtensionDialog);
-        extensionsBlock.appendChild(newButton);
-    }
-}
 
 // Initialize the extension
 (async function initExtension() {

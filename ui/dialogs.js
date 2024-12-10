@@ -1,4 +1,4 @@
-import { openExtensionWithAPI, createNewExtension } from '../api.js';
+import { createNewExtension } from '../api.js';
 import { loadExtensionSettings } from '../../../../extensions.js';
 
 export async function showExtensionPathPopup(fullPath, ideCommand) {

@@ -1,4 +1,5 @@
 import { settingsKey, EXTENSION_NAME } from '../consts.js';
+import { addPathButtonsToGlobalExtensions,  updateNewExtensionButton } from './controls.js';
 
 export async function renderExtensionSettings() {
     const context = SillyTavern.getContext();
