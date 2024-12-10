@@ -16,6 +16,7 @@ export function createSortControls() {
         { value: 'name', text: 'Internal Name' },
         { value: 'type', text: 'Local/Global' },
         { value: 'enabled', text: 'Enabled/Disabled' },
+        { value: 'update', text: 'Update Available' },
     ];
 
     options.forEach(opt => {
@@ -59,6 +60,8 @@ export function createSortControls() {
                     return aGlobal === bGlobal ? sortExtensionsByName(a, b) : (aGlobal ? -1 : 1);
                 case 'enabled':
                     return sortExtensionsByEnabled(a, b);
+                case 'update':
+                    return sortExtensionsByUpdate(a, b);
                 default:
                     return 0; // Keep original order
             }

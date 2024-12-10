@@ -26,3 +26,20 @@ export function sortExtensionsByEnabled(a, b) {
 
     return enabledA ? 1 : -1;
 }
+
+/**
+ * Sort extensions by their update status
+ * @param {Element} a First extension block element
+ * @param {Element} b Second extension block element
+ * @returns {number} Sort order
+ */
+export function sortExtensionsByUpdate(a, b) {
+    const updateA = !!a.querySelector('.extension_update_button');
+    const updateB = !!b.querySelector('.extension_update_button');
+
+    if (updateA === updateB) {
+        return sortExtensionsByName(a, b);
+    }
+
+    return updateA ? -1 : 1;
+}

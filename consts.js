@@ -7,6 +7,7 @@ const SORT_OPTIONS = {
     INTERNAL_NAME: 'name',
     TYPE: 'type',
     ENABLED: 'enabled',
+    UPDATE: 'update',
 };
 
 export { settingsKey, EXTENSION_NAME, SORT_OPTIONS };
