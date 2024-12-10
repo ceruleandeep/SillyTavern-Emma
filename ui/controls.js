@@ -21,6 +21,11 @@ export async function handleOpenExtension(extensionBlock) {
 }
 
 export function addSortControls() {
+    const context = SillyTavern.getContext();
+    const settings = context.extensionSettings[settingsKey];
+    
+    if (!settings.enabled) return;
+
     const extensionsInfo = document.querySelector('.extensions_info');
     if (!extensionsInfo) return;
 
