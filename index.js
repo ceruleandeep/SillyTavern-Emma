@@ -1,5 +1,4 @@
 import { settingsKey } from './consts.js';
-import { loadExtensionSettings } from '../../../extensions.js';
 import { checkAPIAvailable } from './api.js';
 import { renderExtensionSettings } from './ui/settings.js';
 import { addPathButtonsToGlobalExtensions } from './ui/controls.js';
@@ -58,6 +57,7 @@ function updateNewExtensionButton() {
 
 // Initialize the extension
 (async function initExtension() {
+    // noinspection DuplicatedCode
     const context = SillyTavern.getContext();
 
     if (!context.extensionSettings[settingsKey]) {
