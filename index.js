@@ -1,7 +1,7 @@
 import { settingsKey } from './consts.js';
 import { checkAPIAvailable } from './api.js';
 import { renderExtensionSettings } from './ui/settings.js';
-import { addPathButtonsToGlobalExtensions } from './ui/controls.js';
+import { addPathButtonsToGlobalExtensions, addSortControls } from './ui/controls.js';
 import { showCreateExtensionDialog } from './ui/dialogs.js';
 
 let apiAvailable = false;
@@ -26,6 +26,7 @@ const observer = new MutationObserver((mutations) => {
             const extensionsInfo = document.querySelector('.extensions_info');
             if (extensionsInfo) {
                 addPathButtonsToGlobalExtensions();
+                addSortControls();
             }
         }
     }
