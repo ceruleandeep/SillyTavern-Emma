@@ -17,8 +17,8 @@ export function sortExtensionsByName(a, b) {
  * @returns {number} Sort order
  */
 export function sortExtensionsByEnabled(a, b) {
-    const enabledA = !a.querySelector('.extension_toggle')?.checked;
-    const enabledB = !b.querySelector('.extension_toggle')?.checked;
+    const enabledA = !a.querySelector('.toggle_disable')?.checked;
+    const enabledB = !b.querySelector('.toggle_disable')?.checked;
 
     if (enabledA === enabledB) {
         return sortExtensionsByName(a, b);
