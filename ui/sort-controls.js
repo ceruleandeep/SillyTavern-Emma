@@ -1,4 +1,4 @@
-import { sortExtensionsByName, sortExtensionsByEnabled } from '../utils/sort.js';
+import { sortExtensionsByName, sortExtensionsByEnabled, sortExtensionsByUpdate } from '../utils/sort.js';
 import { settingsKey, SORT_OPTIONS } from '../consts.js';
 
 export function createSortControls() {
@@ -34,7 +34,7 @@ export function createSortControls() {
         if (!extensionsContainer) return;
 
         const extensions = Array.from(extensionsContainer.querySelectorAll('.extension_block'));
-        
+
         // Add original order index if not already present
         extensions.forEach((ext, index) => {
             if (!ext.hasAttribute('data-original-order')) {
@@ -45,18 +45,18 @@ export function createSortControls() {
         if (!parent) return;
 
         extensions.sort((a, b) => {
+            const orderA = parseInt(a.dataset.originalOrder) || 0;
+            const orderB = parseInt(b.dataset.originalOrder) || 0;
+            const aGlobal = !!a.querySelector('.fa-server');
+            const bGlobal = !!b.querySelector('.fa-server');
             switch (select.value) {
                 case 'load':
-                    const orderA = parseInt(a.dataset.originalOrder) || 0;
-                    const orderB = parseInt(b.dataset.originalOrder) || 0;
                     return orderA - orderB;
                 case 'display':
                     return sortExtensionsByName(a, b);
                 case 'name':
                     return (a.dataset.name || '').localeCompare(b.dataset.name || '');
                 case 'type':
-                    const aGlobal = !!a.querySelector('.fa-server');
-                    const bGlobal = !!b.querySelector('.fa-server');
                     return aGlobal === bGlobal ? sortExtensionsByName(a, b) : (aGlobal ? -1 : 1);
                 case 'enabled':
                     return sortExtensionsByEnabled(a, b);
