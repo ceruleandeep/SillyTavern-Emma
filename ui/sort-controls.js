@@ -9,12 +9,12 @@ export function createSortControls() {
 
     const select = document.createElement('select');
     select.classList.add('text_pole');
-    
+
     const options = [
         { value: 'load', text: 'Load Order' },
         { value: 'display', text: 'Display Name' },
         { value: 'name', text: 'Internal Name' },
-        { value: 'type', text: 'Local/Global' }
+        { value: 'type', text: 'Local/Global' },
     ];
 
     options.forEach(opt => {
@@ -68,7 +68,7 @@ export function createSortControls() {
     const label = document.createElement('label');
     label.textContent = 'Sort by: ';
     label.appendChild(select);
-    
+
     container.appendChild(label);
     return container;
 }
