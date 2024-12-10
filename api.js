@@ -1,9 +1,8 @@
 // API related functions
-import { getContext } from '../../../extensions.js';
 
 export async function checkAPIAvailable() {
     try {
-        const context = getContext();
+        const context = SillyTavern.getContext();
         const response = await fetch('/api/plugins/emm/probe', {
             method: 'GET',
             headers: context.getRequestHeaders(),
@@ -16,8 +15,7 @@ export async function checkAPIAvailable() {
 }
 
 export async function openExtensionWithAPI(extensionName, editor) {
-    const context = getContext();
-
+    const context = SillyTavern.getContext();
     const response = await fetch('/api/plugins/emm/open', {
         method: 'POST',
         headers: context.getRequestHeaders(),
@@ -38,7 +36,7 @@ export async function openExtensionWithAPI(extensionName, editor) {
 }
 
 export async function createNewExtension(name, displayName, author, email) {
-    const context = getContext();
+    const context = SillyTavern.getContext();
 
     try {
         const response = await fetch('/api/plugins/emm/create', {
