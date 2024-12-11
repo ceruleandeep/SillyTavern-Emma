@@ -6,19 +6,42 @@ import { createSortControls } from './sort-controls.js';
 const t = SillyTavern.getContext().t;
 
 export async function handleOpenExtension(extensionBlock) {
-    const extensionName = extensionBlock.getAttribute('data-name');
-    const context = SillyTavern.getContext();
-    const settings = context.extensionSettings[settingsKey];
+    if (!extensionBlock) {
+        console.error(`[${EXTENSION_NAME}]`, t`Extension block is required`);
+        return;
+    }
 
-    const basePath = settings.basePath.trim();
-    const fullPath = basePath ? `${basePath}${extensionName}` : `extensions/third-party${extensionName}`;
-    const ideCommand = settings.ideCommand?.replace('{path}', fullPath) || '';
+    const extensionName = extensionBlock.getAttribute('data-name');
+    if (!extensionName) {
+        console.error(`[${EXTENSION_NAME}]`, t`Extension name is required`);
+        return;
+    }
+
+    const context = SillyTavern.getContext();
+    /** @type {import('../index.js').EMMSettings} */
+    const settings = context.extensionSettings[settingsKey];
+    if (!settings) {
+        console.error(`[${EXTENSION_NAME}]`, t`Settings not found`);
+        return;
+    }
+
+    // Ensure paths are properly formatted
+    const basePath = settings.basePath?.trim() || '';
+    const normalizedBase = basePath.endsWith('/') ? basePath : `${basePath}/`;
+    const normalizedName = extensionName.startsWith('/') ? extensionName.slice(1) : extensionName;
+    
+    const fullPath = basePath ? 
+        `${normalizedBase}${normalizedName}` : 
+        `extensions/third-party/${normalizedName}`;
 
     try {
+        if (!settings.editor) {
+            throw new Error(t`Editor not configured`);
+        }
         await openExtensionWithAPI(extensionName, settings.editor);
     } catch (error) {
         console.debug(`[${EXTENSION_NAME}]`, t`API not available, falling back to popup`, error);
-        await showExtensionPathPopup(fullPath, ideCommand);
+        await showExtensionPathPopup(fullPath);
     }
 }
 
