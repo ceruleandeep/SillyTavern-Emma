@@ -1,6 +1,41 @@
 import { createNewExtension } from '../api.js';
 import { loadExtensionSettings } from '../../../../extensions.js';
 
+function createCopyButton(text, label, tooltip) {
+    const button = document.createElement('div');
+    button.classList.add('menu_button', 'fa-fw', 'fa-solid', 'fa-copy');
+    button.title = tooltip;
+    button.setAttribute('aria-label', label);
+    
+    button.addEventListener('click', async () => {
+        try {
+            await navigator.clipboard.writeText(text);
+            button.classList.add('emma--success');
+            setTimeout(() => button.classList.remove('emma--success'), 3000);
+        } catch (error) {
+            console.error('Failed to copy:', error);
+            toastr.error('Failed to copy to clipboard');
+        }
+    });
+    
+    return button;
+}
+
+function createContentRow(text, ariaLabel, copyButtonLabel, copyButtonTooltip) {
+    const row = document.createElement('div');
+    row.classList.add('emma--row');
+    row.setAttribute('aria-label', ariaLabel);
+
+    const textElement = document.createElement('div');
+    textElement.textContent = text;
+    textElement.classList.add('monospace');
+
+    const copyButton = createCopyButton(text, copyButtonLabel, copyButtonTooltip);
+
+    row.append(textElement, copyButton);
+    return row;
+}
+
 export async function showExtensionPathPopup(fullPath, ideCommand) {
     if (!fullPath) {
         console.error('Extension path is required');
@@ -15,59 +50,22 @@ export async function showExtensionPathPopup(fullPath, ideCommand) {
     title.textContent = 'Edit Extension';
     title.classList.add('emma--title');
 
-    // Path section
-    const pathRow = document.createElement('div');
-    pathRow.classList.add('emma--row');
-    pathRow.setAttribute('aria-label', 'Extension path');
-
-    const pathText = document.createElement('div');
-    pathText.textContent = fullPath;
-    pathText.classList.add('monospace');
-
-    const copyPath = document.createElement('div');
-    copyPath.classList.add('menu_button', 'fa-fw', 'fa-solid', 'fa-copy');
-    copyPath.title = `Copy extension path: ${fullPath}`;
-    copyPath.setAttribute('aria-label', 'Copy extension path to clipboard');
-    copyPath.addEventListener('click', async () => {
-        try {
-            await navigator.clipboard.writeText(fullPath);
-            copyPath.classList.add('emma--success');
-            setTimeout(() => copyPath.classList.remove('emma--success'), 3000);
-        } catch (error) {
-            console.error('Failed to copy path:', error);
-            toastr.error('Failed to copy path to clipboard');
-        }
-    });
-
-    pathRow.append(pathText, copyPath);
+    const pathRow = createContentRow(
+        fullPath,
+        'Extension path',
+        'Copy extension path to clipboard',
+        `Copy extension path: ${fullPath}`
+    );
+    
     container.append(title, pathRow);
 
-    // Command section - only show if ideCommand is provided
     if (ideCommand) {
-        const commandRow = document.createElement('div');
-        commandRow.classList.add('emma--row');
-        commandRow.setAttribute('aria-label', 'Editor command');
-
-        const commandText = document.createElement('div');
-        commandText.textContent = ideCommand;
-        commandText.classList.add('monospace');
-
-        const copyCommand = document.createElement('div');
-        copyCommand.classList.add('menu_button', 'fa-fw', 'fa-solid', 'fa-copy');
-        copyCommand.title = `Copy editor command: ${ideCommand}`;
-        copyCommand.setAttribute('aria-label', 'Copy editor command to clipboard');
-        copyCommand.addEventListener('click', async () => {
-            try {
-                await navigator.clipboard.writeText(ideCommand);
-                copyCommand.classList.add('emma--success');
-                setTimeout(() => copyCommand.classList.remove('emma--success'), 3000);
-            } catch (error) {
-                console.error('Failed to copy command:', error);
-                toastr.error('Failed to copy command to clipboard');
-            }
-        });
-
-        commandRow.append(commandText, copyCommand);
+        const commandRow = createContentRow(
+            ideCommand,
+            'Editor command',
+            'Copy editor command to clipboard',
+            `Copy editor command: ${ideCommand}`
+        );
         container.appendChild(commandRow);
     }
 
