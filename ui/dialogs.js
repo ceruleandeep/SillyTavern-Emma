@@ -6,7 +6,7 @@ function createCopyButton(text, label, tooltip) {
     button.classList.add('menu_button', 'fa-fw', 'fa-solid', 'fa-copy');
     button.title = tooltip;
     button.setAttribute('aria-label', label);
-    
+
     button.addEventListener('click', async () => {
         try {
             await navigator.clipboard.writeText(text);
@@ -17,7 +17,7 @@ function createCopyButton(text, label, tooltip) {
             toastr.error('Failed to copy to clipboard');
         }
     });
-    
+
     return button;
 }
 
@@ -36,7 +36,7 @@ function createContentRow(text, ariaLabel, copyButtonLabel, copyButtonTooltip) {
     return row;
 }
 
-export async function showExtensionPathPopup(fullPath, ideCommand) {
+export async function showExtensionOpenerPopup(fullPath, ideCommand) {
     if (!fullPath) {
         console.error('Extension path is required');
         return;
@@ -54,9 +54,9 @@ export async function showExtensionPathPopup(fullPath, ideCommand) {
         fullPath,
         'Extension path',
         'Copy extension path to clipboard',
-        `Copy extension path: ${fullPath}`
+        `Copy extension path: ${fullPath}`,
     );
-    
+
     container.append(title, pathRow);
 
     if (ideCommand) {
@@ -64,7 +64,7 @@ export async function showExtensionPathPopup(fullPath, ideCommand) {
             ideCommand,
             'Editor command',
             'Copy editor command to clipboard',
-            `Copy editor command: ${ideCommand}`
+            `Copy editor command: ${ideCommand}`,
         );
         container.appendChild(commandRow);
     }

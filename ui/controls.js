@@ -1,4 +1,4 @@
-import { showCreateExtensionDialog, showExtensionPathPopup } from './dialogs.js';
+import { showCreateExtensionDialog, showExtensionOpenerPopup } from './dialogs.js';
 import { openExtensionWithAPI, checkAPIAvailable } from '../api.js';
 import { EXTENSION_NAME, settingsKey } from '../consts.js';
 import { createSortControls } from './sort-controls.js';
@@ -29,9 +29,9 @@ export async function handleOpenExtension(extensionBlock) {
     const basePath = settings.basePath?.trim() || '';
     const normalizedBase = basePath.endsWith('/') ? basePath : `${basePath}/`;
     const normalizedName = extensionName.startsWith('/') ? extensionName.slice(1) : extensionName;
-    
-    const fullPath = basePath ? 
-        `${normalizedBase}${normalizedName}` : 
+
+    const fullPath = basePath ?
+        `${normalizedBase}${normalizedName}` :
         `extensions/third-party/${normalizedName}`;
 
     try {
@@ -41,7 +41,7 @@ export async function handleOpenExtension(extensionBlock) {
         await openExtensionWithAPI(extensionName, settings.editor);
     } catch (error) {
         console.debug(`[${EXTENSION_NAME}]`, t`API not available, falling back to popup`, error);
-        await showExtensionPathPopup(fullPath);
+        await showExtensionOpenerPopup(fullPath);
     }
 }
 
