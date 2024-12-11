@@ -1,7 +1,7 @@
 const settingsKey = 'sillytavern-emma';
 const EXTENSION_NAME = 'Emma';
 
-const DEFAULT_EDITORS = ['code', 'atom', 'sublime', 'notepad++'];
+const DEFAULT_EDITORS = ['code', 'webstorm', 'atom', 'sublime', 'notepad++'];
 
 const SORT_OPTIONS = {
     LOAD_ORDER: 'load',
