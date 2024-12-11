@@ -1,4 +1,4 @@
-# Extensions Manager Manager
+# Emma
 
 Helper for local development of SillyTavern extensions.
 
@@ -61,7 +61,7 @@ to [also be installed](https://docs.sillytavern.app/for-contributors/server-plug
 
 ## Configuration options
 
-Find "Extensions Manager Manager" in the extensions panel.
+Find "Emma" in the extensions panel.
 
 * "Enabled" – toggle the extension on and off.
 * "Extensions Base Path" – the path to the `scripts/extensions/third-party` directory in your SillyTavern installation.
