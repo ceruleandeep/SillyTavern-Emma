@@ -2,6 +2,11 @@ import { createNewExtension } from '../api.js';
 import { loadExtensionSettings } from '../../../../extensions.js';
 
 export async function showExtensionPathPopup(fullPath, ideCommand) {
+    if (!fullPath) {
+        console.error('Extension path is required');
+        return;
+    }
+
     const context = SillyTavern.getContext();
     const container = document.createElement('div');
     container.classList.add('emma--container');
@@ -10,8 +15,10 @@ export async function showExtensionPathPopup(fullPath, ideCommand) {
     title.textContent = 'Edit Extension';
     title.classList.add('emma--title');
 
+    // Path section
     const pathRow = document.createElement('div');
     pathRow.classList.add('emma--row');
+    pathRow.setAttribute('aria-label', 'Extension path');
 
     const pathText = document.createElement('div');
     pathText.textContent = fullPath;
@@ -19,33 +26,50 @@ export async function showExtensionPathPopup(fullPath, ideCommand) {
 
     const copyPath = document.createElement('div');
     copyPath.classList.add('menu_button', 'fa-fw', 'fa-solid', 'fa-copy');
-    copyPath.title = 'Copy path to clipboard';
+    copyPath.title = `Copy extension path: ${fullPath}`;
+    copyPath.setAttribute('aria-label', 'Copy extension path to clipboard');
     copyPath.addEventListener('click', async () => {
-        await navigator.clipboard.writeText(fullPath);
-        copyPath.classList.add('emma--success');
-        setTimeout(() => copyPath.classList.remove('emma--success'), 3000);
+        try {
+            await navigator.clipboard.writeText(fullPath);
+            copyPath.classList.add('emma--success');
+            setTimeout(() => copyPath.classList.remove('emma--success'), 3000);
+        } catch (error) {
+            console.error('Failed to copy path:', error);
+            toastr.error('Failed to copy path to clipboard');
+        }
     });
 
     pathRow.append(pathText, copyPath);
+    container.append(title, pathRow);
 
-    const commandRow = document.createElement('div');
-    commandRow.classList.add('emma--row');
+    // Command section - only show if ideCommand is provided
+    if (ideCommand) {
+        const commandRow = document.createElement('div');
+        commandRow.classList.add('emma--row');
+        commandRow.setAttribute('aria-label', 'Editor command');
 
-    const commandText = document.createElement('div');
-    commandText.textContent = ideCommand;
-    commandText.classList.add('monospace');
+        const commandText = document.createElement('div');
+        commandText.textContent = ideCommand;
+        commandText.classList.add('monospace');
 
-    const copyCommand = document.createElement('div');
-    copyCommand.classList.add('menu_button', 'fa-fw', 'fa-solid', 'fa-copy');
-    copyCommand.title = 'Copy command to clipboard';
-    copyCommand.addEventListener('click', async () => {
-        await navigator.clipboard.writeText(ideCommand);
-        copyCommand.classList.add('emma--success');
-        setTimeout(() => copyCommand.classList.remove('emma--success'), 3000);
-    });
+        const copyCommand = document.createElement('div');
+        copyCommand.classList.add('menu_button', 'fa-fw', 'fa-solid', 'fa-copy');
+        copyCommand.title = `Copy editor command: ${ideCommand}`;
+        copyCommand.setAttribute('aria-label', 'Copy editor command to clipboard');
+        copyCommand.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(ideCommand);
+                copyCommand.classList.add('emma--success');
+                setTimeout(() => copyCommand.classList.remove('emma--success'), 3000);
+            } catch (error) {
+                console.error('Failed to copy command:', error);
+                toastr.error('Failed to copy command to clipboard');
+            }
+        });
 
-    commandRow.append(commandText, copyCommand);
-    container.append(title, pathRow, commandRow);
+        commandRow.append(commandText, copyCommand);
+        container.appendChild(commandRow);
+    }
 
     return context.callGenericPopup(container, context.POPUP_TYPE.TEXT);
 }
