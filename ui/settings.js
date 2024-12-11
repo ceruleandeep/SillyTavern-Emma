@@ -57,19 +57,22 @@ export async function renderExtensionSettings() {
     enabledCheckboxLabel.append(enabledCheckbox, enabledCheckboxText);
     inlineDrawerContent.append(enabledCheckboxLabel);
 
-    // Editor select
+    // Editor selection
+    const editorContainer = document.createElement('div');
+    
     const editorLabel = document.createElement('label');
     editorLabel.htmlFor = `${settingsKey}-editor`;
     editorLabel.textContent = context.t`Editor`;
-
-    const editorSelect = document.createElement('select');
-    editorSelect.id = `${settingsKey}-editor`;
-    editorSelect.classList.add('text_pole');
+    editorContainer.appendChild(editorLabel);
 
     try {
         const response = await fetch('/api/plugins/emma/editors');
         if (response.ok) {
             const editors = await response.json();
+            const editorSelect = document.createElement('select');
+            editorSelect.id = `${settingsKey}-editor`;
+            editorSelect.classList.add('text_pole');
+            
             editors.forEach(editor => {
                 const option = document.createElement('option');
                 option.value = editor;
@@ -77,22 +80,25 @@ export async function renderExtensionSettings() {
                 option.selected = settings.editor === editor;
                 editorSelect.appendChild(option);
             });
+
+            editorSelect.addEventListener('change', () => {
+                settings.editor = editorSelect.value;
+                context.saveSettingsDebounced();
+            });
+            
+            editorContainer.appendChild(editorSelect);
+        } else {
+            throw new Error('Failed to fetch editors');
         }
     } catch (error) {
         console.debug(`[${EXTENSION_NAME}]`, t`Failed to fetch editors`, error);
-        const option = document.createElement('option');
-        option.value = 'code';
-        option.textContent = 'code';
-        option.selected = true;
-        editorSelect.appendChild(option);
+        const message = document.createElement('span');
+        message.classList.add('warning');
+        message.textContent = context.t`Editor selection unavailable - API unreachable`;
+        editorContainer.appendChild(message);
     }
 
-    editorSelect.addEventListener('change', () => {
-        settings.editor = editorSelect.value;
-        context.saveSettingsDebounced();
-    });
-
-    inlineDrawerContent.append(editorLabel, editorSelect);
+    inlineDrawerContent.appendChild(editorContainer);
 
     // Base path input
     const basePathLabel = document.createElement('label');
