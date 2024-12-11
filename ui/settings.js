@@ -20,7 +20,7 @@ function createInlineDrawer(context) {
     inlineDrawerContent.classList.add('inline-drawer-content');
 
     inlineDrawer.append(inlineDrawerToggle, inlineDrawerContent);
-    
+
     return { inlineDrawer, inlineDrawerContent };
 }
 
@@ -28,12 +28,12 @@ function createEnabledCheckbox(context, settings) {
     const enabledCheckboxLabel = document.createElement('label');
     enabledCheckboxLabel.classList.add('checkbox_label');
     enabledCheckboxLabel.htmlFor = `${settingsKey}-enabled`;
-    
+
     const enabledCheckbox = document.createElement('input');
     enabledCheckbox.id = `${settingsKey}-enabled`;
     enabledCheckbox.type = 'checkbox';
     enabledCheckbox.checked = settings.enabled;
-    
+
     enabledCheckbox.addEventListener('change', () => {
         settings.enabled = enabledCheckbox.checked;
         context.saveSettingsDebounced();
@@ -49,13 +49,13 @@ function createEnabledCheckbox(context, settings) {
     const enabledCheckboxText = document.createElement('span');
     enabledCheckboxText.textContent = context.t`Enabled`;
     enabledCheckboxLabel.append(enabledCheckbox, enabledCheckboxText);
-    
+
     return enabledCheckboxLabel;
 }
 
 async function createEditorSelection(context, settings) {
     const editorContainer = document.createElement('div');
-    
+
     const editorLabel = document.createElement('label');
     editorLabel.htmlFor = `${settingsKey}-editor`;
     editorLabel.textContent = context.t`Editor`;
@@ -71,7 +71,7 @@ async function createEditorSelection(context, settings) {
         const editorSelect = document.createElement('select');
         editorSelect.id = `${settingsKey}-editor`;
         editorSelect.classList.add('text_pole');
-        
+
         editors.forEach(editor => {
             const option = document.createElement('option');
             option.value = editor;
@@ -84,11 +84,11 @@ async function createEditorSelection(context, settings) {
             settings.editor = editorSelect.value;
             context.saveSettingsDebounced();
         });
-        
+
         editorContainer.appendChild(editorSelect);
     } catch (error) {
         console.debug(`[${EXTENSION_NAME}]`, context.t`Failed to fetch editors`, error);
-        const message = document.createElement('span');
+        const message = document.createElement('div');
         message.classList.add('warning');
         message.textContent = context.t`Editor selection unavailable - API unreachable`;
         editorContainer.appendChild(message);
@@ -108,7 +108,7 @@ function createBasePathInput(context, settings) {
     basePathInput.classList.add('text_pole');
     basePathInput.value = settings.basePath || '';
     basePathInput.placeholder = '/path/to/SillyTavern/extensions/third-party';
-    
+
     basePathInput.addEventListener('input', () => {
         settings.basePath = basePathInput.value;
         context.saveSettingsDebounced();
@@ -121,7 +121,7 @@ export async function renderExtensionSettings() {
     const context = SillyTavern.getContext();
     const settingsElementId = `${settingsKey}-settings`;
     const settingsContainer = document.getElementById(settingsElementId) ?? document.getElementById('extensions_settings2');
-    
+
     if (!settingsContainer) {
         return;
     }
