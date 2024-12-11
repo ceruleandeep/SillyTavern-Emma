@@ -3,7 +3,6 @@ import { checkAPIAvailable } from './api.js';
 import { renderExtensionSettings } from './ui/settings.js';
 import { addPathButtonsToGlobalExtensions, addSortControls, updateNewExtensionButton } from './ui/controls.js';
 
-let apiAvailable = false;
 
 const t = SillyTavern.getContext().t;
 
@@ -66,8 +65,8 @@ observer.observe(document.body, {
 
     context.saveSettingsDebounced();
 
-    apiAvailable = await checkAPIAvailable();
-    console.debug(`[${EXTENSION_NAME}]`, t`API available`, apiAvailable);
+    await checkAPIAvailable();
+    console.debug(`[${EXTENSION_NAME}]`, t`API available`, isAPIAvailable());
 
     renderExtensionSettings().catch(error => {
         console.error(`[${EXTENSION_NAME}]`, t`Failed to render settings`, error);

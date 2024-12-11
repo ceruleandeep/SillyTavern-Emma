@@ -1,12 +1,18 @@
 // API related functions
 
-import { EXTENSION_NAME } from './consts.js';
+import { EXTENSION_NAME, DEFAULT_EDITORS } from './consts.js';
 const t = SillyTavern.getContext().t;
+
+let apiAvailable = false;
+
+export function isAPIAvailable() {
+    return apiAvailable;
+}
 
 export async function getEditorsList() {
     const context = SillyTavern.getContext();
     
-    if (!window.apiAvailable) {
+    if (!apiAvailable) {
         return DEFAULT_EDITORS;
     }
 
@@ -27,6 +33,11 @@ export async function getEditorsList() {
 }
 
 export async function checkAPIAvailable() {
+    apiAvailable = await probeAPI();
+    return apiAvailable;
+}
+
+async function probeAPI() {
     try {
         const context = SillyTavern.getContext();
         const response = await fetch('/api/plugins/emma/probe', {

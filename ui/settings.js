@@ -1,6 +1,6 @@
 import { settingsKey, EXTENSION_NAME } from '../consts.js';
 import { addPathButtonsToGlobalExtensions, updateNewExtensionButton } from './controls.js';
-import { getEditorsList } from '../api.js';
+import { getEditorsList, isAPIAvailable } from '../api.js';
 
 function createInlineDrawer(context) {
     const inlineDrawer = document.createElement('div');
@@ -85,7 +85,7 @@ async function createEditorSelection(context, settings) {
         editorContainer.appendChild(editorSelect);
 
         // Only show warning if API was available but failed
-        if (window.apiAvailable) {
+        if (isAPIAvailable()) {
             const message = document.createElement('div');
             message.classList.add('warning');
             message.textContent = context.t`Editor API unreachable - using default editor list`;
