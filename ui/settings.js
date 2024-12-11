@@ -127,6 +127,17 @@ function createBasePathInput(context, settings) {
 }
 
 
+function createInstallLinkRow() {
+    const apiUnavailableMessageRow = document.createElement('div');
+    apiUnavailableMessageRow.classList.add('flex', 'marginTopBot5', 'justifySpaceBetween', 'alignItemsCenter');
+    const apiUnavailableMessage = document.createElement('div');
+    apiUnavailableMessage.textContent = t`API unavailable`;
+    apiUnavailableMessage.classList.add('warning');
+    const apiInstallLink = createPluginInstallLink();
+    apiUnavailableMessageRow.append(apiUnavailableMessage, apiInstallLink);
+    return apiUnavailableMessageRow;
+}
+
 export async function renderExtensionSettings() {
     const context = SillyTavern.getContext();
     const settingsElementId = `${settingsKey}-settings`;
@@ -140,16 +151,8 @@ export async function renderExtensionSettings() {
     const { inlineDrawer, inlineDrawerContent } = createInlineDrawer(context);
     settingsContainer.append(inlineDrawer);
 
-    const apiUnavailableMessageRow = isAPIAvailable() ? null : document.createElement('div');
-    if (apiUnavailableMessageRow) {
-        apiUnavailableMessageRow.classList.add('flex', 'marginTopBot5', 'justifySpaceBetween', 'alignItemsCenter');
-        const apiUnavailableMessage = document.createElement('div');
-        apiUnavailableMessage.textContent = t`API unavailable`;
-        apiUnavailableMessage.classList.add('warning');
-        const apiInstallLink = createPluginInstallLink();
-        apiUnavailableMessageRow.append(apiUnavailableMessage, apiInstallLink);
-        inlineDrawerContent.appendChild(apiUnavailableMessageRow);
-    }
+    // Add API install link if API is unavailable
+    !isAPIAvailable() && inlineDrawerContent.appendChild(createInstallLinkRow());
 
     // Add enabled checkbox
     const enabledCheckbox = createEnabledCheckbox(context, settings);
@@ -160,6 +163,5 @@ export async function renderExtensionSettings() {
     inlineDrawerContent.appendChild(editorSelection);
 
     // Add base path input
-    const basePathContainer = createBasePathInput(context, settings);
-    inlineDrawerContent.appendChild(basePathContainer);
+    isAPIAvailable() || inlineDrawerContent.appendChild(createBasePathInput(context, settings));
 }
