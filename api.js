@@ -3,6 +3,29 @@
 import { EXTENSION_NAME } from './consts.js';
 const t = SillyTavern.getContext().t;
 
+export async function getEditorsList() {
+    const context = SillyTavern.getContext();
+    
+    if (!window.apiAvailable) {
+        return DEFAULT_EDITORS;
+    }
+
+    try {
+        const response = await fetch('/api/plugins/emma/editors', {
+            headers: context.getRequestHeaders()
+        });
+        
+        if (!response.ok) {
+            throw new Error('Failed to fetch editors');
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.debug(`[${EXTENSION_NAME}]`, t`Failed to fetch editors`, error);
+        throw error;
+    }
+}
+
 export async function checkAPIAvailable() {
     try {
         const context = SillyTavern.getContext();

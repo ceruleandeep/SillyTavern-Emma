@@ -12,4 +12,4 @@ const SORT_OPTIONS = {
     UPDATE: 'update',
 };
 
-export { settingsKey, EXTENSION_NAME, SORT_OPTIONS };
+export { settingsKey, EXTENSION_NAME, SORT_OPTIONS, DEFAULT_EDITORS };

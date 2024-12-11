@@ -1,5 +1,6 @@
-import { settingsKey, EXTENSION_NAME, DEFAULT_EDITORS } from '../consts.js';
+import { settingsKey, EXTENSION_NAME } from '../consts.js';
 import { addPathButtonsToGlobalExtensions, updateNewExtensionButton } from './controls.js';
+import { getEditorsList } from '../api.js';
 
 function createInlineDrawer(context) {
     const inlineDrawer = document.createElement('div');
@@ -66,12 +67,8 @@ async function createEditorSelection(context, settings) {
     editorSelect.classList.add('text_pole');
 
     try {
-        const response = await fetch('/api/plugins/emma/editors');
-        if (!response.ok) {
-            throw new Error('Failed to fetch editors');
-        }
-
-        const editors = await response.json();
+        const editors = await getEditorsList();
+        
         editors.forEach(editor => {
             const option = document.createElement('option');
             option.value = editor;
@@ -86,24 +83,20 @@ async function createEditorSelection(context, settings) {
         });
 
         editorContainer.appendChild(editorSelect);
-    } catch (error) {
-        console.debug(`[${EXTENSION_NAME}]`, context.t`Failed to fetch editors`, error);
-        
-        // Use default editors list
-        DEFAULT_EDITORS.forEach(editor => {
-            const option = document.createElement('option');
-            option.value = editor;
-            option.textContent = editor;
-            option.selected = settings.editor === editor;
-            editorSelect.appendChild(option);
-        });
 
-        // Still show the warning about API being unreachable
+        // Only show warning if API was available but failed
+        if (window.apiAvailable) {
+            const message = document.createElement('div');
+            message.classList.add('warning');
+            message.textContent = context.t`Editor API unreachable - using default editor list`;
+            editorContainer.appendChild(message);
+        }
+    } catch (error) {
+        console.error(`[${EXTENSION_NAME}]`, context.t`Failed to get editors list`, error);
         const message = document.createElement('div');
         message.classList.add('warning');
-        message.textContent = context.t`Editor API unreachable - using default editor list`;
-        editorContainer.append(editorSelect, message);
-        return editorContainer;
+        message.textContent = context.t`Failed to get editors list`;
+        editorContainer.appendChild(message);
     }
 
     return editorContainer;
