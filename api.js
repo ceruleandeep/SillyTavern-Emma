@@ -1,22 +1,25 @@
 // API related functions
 
+import { EXTENSION_NAME } from './consts.js';
+const t = SillyTavern.getContext().t;
+
 export async function checkAPIAvailable() {
     try {
         const context = SillyTavern.getContext();
-        const response = await fetch('/api/plugins/emm/probe', {
+        const response = await fetch('/api/plugins/emma/probe', {
             method: 'GET',
             headers: context.getRequestHeaders(),
         });
         return response.status === 204;
     } catch (error) {
-        console.debug('Extension Manager: API probe failed', error);
+        console.debug(`[${EXTENSION_NAME}]`, t`API probe failed`, error);
         return false;
     }
 }
 
 export async function openExtensionWithAPI(extensionName, editor) {
     const context = SillyTavern.getContext();
-    const response = await fetch('/api/plugins/emm/open', {
+    const response = await fetch('/api/plugins/emma/open', {
         method: 'POST',
         headers: context.getRequestHeaders(),
         body: JSON.stringify({
@@ -39,7 +42,7 @@ export async function createNewExtension(name, displayName, author, email) {
     const context = SillyTavern.getContext();
 
     try {
-        const response = await fetch('/api/plugins/emm/create', {
+        const response = await fetch('/api/plugins/emma/create', {
             method: 'POST',
             headers: context.getRequestHeaders(),
             body: JSON.stringify({
@@ -58,21 +61,21 @@ export async function createNewExtension(name, displayName, author, email) {
                     return;
                 }
             } catch (parseError) {
-                console.debug('Extension Manager: Failed to parse error response', parseError);
+                console.debug(`[${EXTENSION_NAME}]`, t`Failed to parse error response`, parseError);
             }
-            toastr.error('Failed to create extension');
+            toastr.error(t`Failed to create extension`);
             return;
         }
 
         const manifest = await response.json();
 
-        toastr.success(`Extension "${manifest.display_name}" by ${manifest.author} (version ${manifest.version}) has been created successfully!`, 'Extension creation successful');
-        console.debug(`Extension "${manifest.display_name}" has been installed successfully at ${manifest.extensionPath}`);
+        toastr.success(t`Extension "${manifest.display_name}" by ${manifest.author} (version ${manifest.version}) has been created successfully!`, t`Extension creation successful`);
+        console.debug(`[${EXTENSION_NAME}]`, t`Extension "${manifest.display_name}" installed at ${manifest.extensionPath}`);
 
         return manifest;
     } catch (error) {
-        console.error('Extension Manager: Failed to create extension', error);
-        toastr.error('Failed to create extension');
+        console.error(`[${EXTENSION_NAME}]`, t`Failed to create extension`, error);
+        toastr.error(t`Failed to create extension`);
         throw error;
     }
 }

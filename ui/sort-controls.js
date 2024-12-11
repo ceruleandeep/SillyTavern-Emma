@@ -5,7 +5,7 @@ export function createSortControls() {
     const context = SillyTavern.getContext();
     const settings = context.extensionSettings[settingsKey];
     const container = document.createElement('div');
-    container.classList.add('emm--sort-controls');
+    container.classList.add('emma--sort-controls');
 
     const select = document.createElement('select');
     select.classList.add('text_pole');

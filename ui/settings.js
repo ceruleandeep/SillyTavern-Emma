@@ -1,5 +1,6 @@
 import { settingsKey, EXTENSION_NAME } from '../consts.js';
 import { addPathButtonsToGlobalExtensions,  updateNewExtensionButton } from './controls.js';
+const t = SillyTavern.getContext().t;
 
 export async function renderExtensionSettings() {
     const context = SillyTavern.getContext();
@@ -66,7 +67,7 @@ export async function renderExtensionSettings() {
     editorSelect.classList.add('text_pole');
 
     try {
-        const response = await fetch('/api/plugins/emm/editors');
+        const response = await fetch('/api/plugins/emma/editors');
         if (response.ok) {
             const editors = await response.json();
             editors.forEach(editor => {
@@ -78,7 +79,7 @@ export async function renderExtensionSettings() {
             });
         }
     } catch (error) {
-        console.debug('Extension Manager: Failed to fetch editors', error);
+        console.debug(`[${EXTENSION_NAME}]`, t`Failed to fetch editors`, error);
         const option = document.createElement('option');
         option.value = 'code';
         option.textContent = 'code';

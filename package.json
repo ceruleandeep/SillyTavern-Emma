@@ -1,5 +1,5 @@
 {
-  "name": "sillytavern-extensionsmanagermanager",
+  "name": "sillytavern-emma",
   "version": "1.0.0",
   "scripts": {
     "build": "node build.js"

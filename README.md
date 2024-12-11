@@ -53,10 +53,10 @@ SillyTavern 1.12.8 and above.
 Use this URL with the [extension installer](https://docs.sillytavern.app/extensions/):
 
 ```
-https://github.com/ceruleandeep/SillyTavern-ExtensionsManagerManager
+https://github.com/ceruleandeep/SillyTavern-Emma
 ```
 
-Creating new extensions and single-click editing requires the [server plugin](https://github.com/ceruleandeep/SillyTavern-ExtensionsManagerManager-Plugin)
+Creating new extensions and single-click editing requires the [server plugin](https://github.com/ceruleandeep/SillyTavern-Emma-Plugin)
 to [also be installed](https://docs.sillytavern.app/for-contributors/server-plugins/).
 
 ## Configuration options

@@ -1,7 +1,9 @@
 import { showCreateExtensionDialog, showExtensionPathPopup } from './dialogs.js';
 import { openExtensionWithAPI, checkAPIAvailable } from '../api.js';
-import { settingsKey } from '../consts.js';
+import { EXTENSION_NAME, settingsKey } from '../consts.js';
 import { createSortControls } from './sort-controls.js';
+
+const t = SillyTavern.getContext().t;
 
 export async function handleOpenExtension(extensionBlock) {
     const extensionName = extensionBlock.getAttribute('data-name');
@@ -15,7 +17,7 @@ export async function handleOpenExtension(extensionBlock) {
     try {
         await openExtensionWithAPI(extensionName, settings.editor);
     } catch (error) {
-        console.debug('Extension Manager: API not available, falling back to popup', error);
+        console.debug(`[${EXTENSION_NAME}]`, t`API not available, falling back to popup`, error);
         await showExtensionPathPopup(fullPath, ideCommand);
     }
 }
@@ -23,7 +25,7 @@ export async function handleOpenExtension(extensionBlock) {
 export function addSortControls() {
     const context = SillyTavern.getContext();
     const settings = context.extensionSettings[settingsKey];
-    
+
     if (!settings.enabled) return;
 
     const extensionsInfo = document.querySelector('.extensions_info');
@@ -35,7 +37,7 @@ export function addSortControls() {
     if (!installedSection) return;
 
     // Check if sort controls already exist
-    if (installedSection.querySelector('.emm--sort-controls')) return;
+    if (installedSection.querySelector('.emma--sort-controls')) return;
 
     // Find the first extension block to insert before
     const firstExtension = installedSection.querySelector('.extension_block');
@@ -76,7 +78,7 @@ export function updateNewExtensionButton() {
     const context = SillyTavern.getContext();
     const settings = context.extensionSettings[settingsKey];
     const extensionsBlock = document.querySelector('#rm_extensions_block .extensions_block div');
-    const existingButton = document.querySelector('#emm_new_extension_button');
+    const existingButton = document.querySelector('#emma_new_extension_button');
 
     if (existingButton) {
         existingButton.remove();
@@ -84,7 +86,7 @@ export function updateNewExtensionButton() {
 
     if (settings.enabled && checkAPIAvailable() && extensionsBlock) {
         const newButton = document.createElement('div');
-        newButton.id = 'emm_new_extension_button';
+        newButton.id = 'emma_new_extension_button';
         newButton.className = 'menu_button menu_button_icon';
         newButton.innerHTML = '<i class="fa-solid fa-cube fa-fw"></i><span>New extension</span>';
         newButton.addEventListener('click', showCreateExtensionDialog);

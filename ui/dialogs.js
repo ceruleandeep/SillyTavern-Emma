@@ -4,14 +4,14 @@ import { loadExtensionSettings } from '../../../../extensions.js';
 export async function showExtensionPathPopup(fullPath, ideCommand) {
     const context = SillyTavern.getContext();
     const container = document.createElement('div');
-    container.classList.add('emm--container');
+    container.classList.add('emma--container');
 
     const title = document.createElement('h3');
     title.textContent = 'Edit Extension';
-    title.classList.add('emm--title');
+    title.classList.add('emma--title');
 
     const pathRow = document.createElement('div');
-    pathRow.classList.add('emm--row');
+    pathRow.classList.add('emma--row');
 
     const pathText = document.createElement('div');
     pathText.textContent = fullPath;
@@ -22,14 +22,14 @@ export async function showExtensionPathPopup(fullPath, ideCommand) {
     copyPath.title = 'Copy path to clipboard';
     copyPath.addEventListener('click', async () => {
         await navigator.clipboard.writeText(fullPath);
-        copyPath.classList.add('emm--success');
-        setTimeout(() => copyPath.classList.remove('emm--success'), 3000);
+        copyPath.classList.add('emma--success');
+        setTimeout(() => copyPath.classList.remove('emma--success'), 3000);
     });
 
     pathRow.append(pathText, copyPath);
 
     const commandRow = document.createElement('div');
-    commandRow.classList.add('emm--row');
+    commandRow.classList.add('emma--row');
 
     const commandText = document.createElement('div');
     commandText.textContent = ideCommand;
@@ -40,8 +40,8 @@ export async function showExtensionPathPopup(fullPath, ideCommand) {
     copyCommand.title = 'Copy command to clipboard';
     copyCommand.addEventListener('click', async () => {
         await navigator.clipboard.writeText(ideCommand);
-        copyCommand.classList.add('emm--success');
-        setTimeout(() => copyCommand.classList.remove('emm--success'), 3000);
+        copyCommand.classList.add('emma--success');
+        setTimeout(() => copyCommand.classList.remove('emma--success'), 3000);
     });
 
     commandRow.append(commandText, copyCommand);
@@ -54,11 +54,11 @@ export async function showCreateExtensionDialog() {
     const context = SillyTavern.getContext();
 
     const container = document.createElement('div');
-    container.classList.add('emm--container');
+    container.classList.add('emma--container');
 
     const title = document.createElement('h3');
     title.textContent = 'Create New Extension';
-    title.classList.add('emm--title');
+    title.classList.add('emma--title');
 
     const nameInput = document.createElement('input');
     nameInput.type = 'text';

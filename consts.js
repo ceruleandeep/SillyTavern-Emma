@@ -1,5 +1,5 @@
-const settingsKey = 'sillytavern-extensionsmanagermanager'; // Auto-generated from package.json
-const EXTENSION_NAME = 'Extensions Manager Manager'; // Auto-generated from manifest.json
+const settingsKey = 'sillytavern-emma';
+const EXTENSION_NAME = 'Emma';
 
 const SORT_OPTIONS = {
     LOAD_ORDER: 'load',

@@ -1,9 +1,11 @@
-import { settingsKey } from './consts.js';
+import { settingsKey, EXTENSION_NAME } from './consts.js';
 import { checkAPIAvailable } from './api.js';
 import { renderExtensionSettings } from './ui/settings.js';
 import { addPathButtonsToGlobalExtensions, addSortControls, updateNewExtensionButton } from './ui/controls.js';
 
 let apiAvailable = false;
+
+const t = SillyTavern.getContext().t;
 
 /**
  * @type {EMMSettings}
@@ -11,6 +13,7 @@ let apiAvailable = false;
  * @property {boolean} enabled Whether the extension is enabled
  * @property {string} basePath The base path for third-party extensions
  * @property {string} editor The default editor to open extensions with
+ * @property {string} sortOrder Last-used sort order for extensions
  */
 const defaultSettings = Object.freeze({
     enabled: true,
@@ -64,13 +67,13 @@ observer.observe(document.body, {
     context.saveSettingsDebounced();
 
     apiAvailable = await checkAPIAvailable();
-    console.debug('Extension Manager: API available:', apiAvailable);
+    console.debug(`[${EXTENSION_NAME}]`, t`API available`, apiAvailable);
 
     renderExtensionSettings().catch(error => {
-        console.error('Extension Manager: Failed to render settings', error);
+        console.error(`[${EXTENSION_NAME}]`, t`Failed to render settings`, error);
     });
 
     updateNewExtensionButton();
 })().catch(error => {
-    console.error('Extension Manager: Initialization failed', error);
+    console.error(`[${EXTENSION_NAME}]`, t`Failed to initialize extension`, error);
 });
