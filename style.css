@@ -11,14 +11,18 @@
   flex-direction: column;
   gap: 10px;
 }
+.emma--container .monospace {
+  text-align: left;
+}
 .emma--title {
   text-align: center;
   margin-bottom: 10px;
 }
 .emma--row {
   display: flex;
-  align-items: center;
+  justify-content: space-between;
   gap: 10px;
+  margin-bottom: 0.5em;
 }
 @keyframes success {
   0%,

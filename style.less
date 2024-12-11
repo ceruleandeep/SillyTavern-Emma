@@ -13,6 +13,10 @@
         display: flex;
         flex-direction: column;
         gap: 10px;
+
+        .monospace {
+            text-align: left;
+        }
     }
 
     &--title {
@@ -22,8 +26,9 @@
 
     &--row {
         display: flex;
-        align-items: center;
+        justify-content: space-between;
         gap: 10px;
+        margin-bottom: 0.5em;
     }
 
     @keyframes success {
