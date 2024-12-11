@@ -25,7 +25,10 @@ Create new [UI extensions](https://docs.sillytavern.app/for-contributors/writing
 
 ## Configuration
 
-* Editor: the command to run your IDE with the correct arguments to open the extension's directory. Currently available: `webstorm`, `code`, `open`.
+Find "Emma" in the extensions panel.
+
+* Enabled: whether Emma is enabled.
+* Editor: the shell command that launches your IDE.
 * Extensions Base Path: the path to the `scripts/extensions/third-party` directory in your SillyTavern installation. Only used for the "no auto-open" fallback.
 
 <img width="400" alt="emma-config" src="https://github.com/user-attachments/assets/70a5aa8a-4932-492c-98d0-28c38dedd2ed">
@@ -58,15 +61,6 @@ https://github.com/ceruleandeep/SillyTavern-Emma
 
 Creating new extensions and single-click editing requires the [server plugin](https://github.com/ceruleandeep/SillyTavern-Emma-Plugin)
 to [also be installed](https://docs.sillytavern.app/for-contributors/server-plugins/).
-
-## Configuration options
-
-Find "Emma" in the extensions panel.
-
-* "Enabled" – toggle the extension on and off.
-* "Extensions Base Path" – the path to the `scripts/extensions/third-party` directory in your SillyTavern installation.
-* "IDE Command Template" - the command to run your IDE with the correct arguments to open the extension's directory. 
-    * `{path}` will be replaced with the path to the extension's directory.
 
 ### Just Webstorm Things
 
