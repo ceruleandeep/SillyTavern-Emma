@@ -1,6 +1,9 @@
 import { settingsKey, EXTENSION_NAME, DEFAULT_EDITORS } from '../consts.js';
 import { addPathButtonsToGlobalExtensions, updateNewExtensionButton } from './controls.js';
+import { createPluginInstallLink } from './components.js';
 import { getEditorsList, isAPIAvailable } from '../api.js';
+
+const t = SillyTavern.getContext().t;
 
 function createInlineDrawer(context) {
     const inlineDrawer = document.createElement('div');
@@ -26,6 +29,8 @@ function createInlineDrawer(context) {
 }
 
 function createEnabledCheckbox(context, settings) {
+    const enabledCheckboxContainer = document.createElement('div');
+
     const enabledCheckboxLabel = document.createElement('label');
     enabledCheckboxLabel.classList.add('checkbox_label');
     enabledCheckboxLabel.htmlFor = `${settingsKey}-enabled`;
@@ -51,15 +56,18 @@ function createEnabledCheckbox(context, settings) {
     enabledCheckboxText.textContent = context.t`Enabled`;
     enabledCheckboxLabel.append(enabledCheckbox, enabledCheckboxText);
 
-    return enabledCheckboxLabel;
+    enabledCheckboxContainer.appendChild(enabledCheckboxLabel);
+    enabledCheckboxContainer.classList.add('marginTopBot5');
+    return enabledCheckboxContainer;
 }
 
 async function createEditorSelection(context, settings) {
     const editorContainer = document.createElement('div');
+    editorContainer.classList.add('marginTopBot5');
 
     const editorLabel = document.createElement('label');
     editorLabel.htmlFor = `${settingsKey}-editor`;
-    editorLabel.textContent = isAPIAvailable() ? context.t`Editor` : context.t`Editor (API unavailable)`;
+    editorLabel.textContent = context.t`Editor`;
     editorContainer.appendChild(editorLabel);
 
     const editorSelect = document.createElement('select');
@@ -95,6 +103,9 @@ async function createEditorSelection(context, settings) {
 }
 
 function createBasePathInput(context, settings) {
+    const basePathContainer = document.createElement('div');
+    basePathContainer.classList.add('marginTopBot5');
+
     const basePathLabel = document.createElement('label');
     basePathLabel.htmlFor = `${settingsKey}-basePath`;
     basePathLabel.textContent = context.t`Extensions base path`;
@@ -111,8 +122,10 @@ function createBasePathInput(context, settings) {
         context.saveSettingsDebounced();
     });
 
-    return { basePathLabel, basePathInput };
+    basePathContainer.append(basePathLabel, basePathInput);
+    return basePathContainer;
 }
+
 
 export async function renderExtensionSettings() {
     const context = SillyTavern.getContext();
@@ -127,6 +140,17 @@ export async function renderExtensionSettings() {
     const { inlineDrawer, inlineDrawerContent } = createInlineDrawer(context);
     settingsContainer.append(inlineDrawer);
 
+    const apiUnavailableMessageRow = isAPIAvailable() ? null : document.createElement('div');
+    if (apiUnavailableMessageRow) {
+        apiUnavailableMessageRow.classList.add('flex', 'marginTopBot5', 'justifySpaceBetween', 'alignItemsCenter');
+        const apiUnavailableMessage = document.createElement('div');
+        apiUnavailableMessage.textContent = t`API unavailable`;
+        apiUnavailableMessage.classList.add('warning');
+        const apiInstallLink = createPluginInstallLink();
+        apiUnavailableMessageRow.append(apiUnavailableMessage, apiInstallLink);
+        inlineDrawerContent.appendChild(apiUnavailableMessageRow);
+    }
+
     // Add enabled checkbox
     const enabledCheckbox = createEnabledCheckbox(context, settings);
     inlineDrawerContent.appendChild(enabledCheckbox);
@@ -136,6 +160,6 @@ export async function renderExtensionSettings() {
     inlineDrawerContent.appendChild(editorSelection);
 
     // Add base path input
-    const { basePathLabel, basePathInput } = createBasePathInput(context, settings);
-    inlineDrawerContent.append(basePathLabel, basePathInput);
+    const basePathContainer = createBasePathInput(context, settings);
+    inlineDrawerContent.appendChild(basePathContainer);
 }

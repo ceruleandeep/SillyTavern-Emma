@@ -21,6 +21,7 @@
 .emma--row {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   gap: 10px;
   margin-bottom: 0.5em;
 }

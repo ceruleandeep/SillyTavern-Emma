@@ -3,9 +3,6 @@ import { checkAPIAvailable, isAPIAvailable } from './api.js';
 import { renderExtensionSettings } from './ui/settings.js';
 import { addPathButtonsToGlobalExtensions, addSortControls, updateNewExtensionButton } from './ui/controls.js';
 
-
-const t = SillyTavern.getContext().t;
-
 /**
  * @type {EMMSettings}
  * @typedef {Object} EMMSettings
@@ -31,11 +28,13 @@ const observer = new MutationObserver((mutations) => {
         );
 
         if (addedDialog) {
+            console.debug(`[${EXTENSION_NAME}]`, 'Found extensions dialog');
             const extensionsInfo = addedDialog.classList?.contains('extensions_info') ?
                 addedDialog :
                 addedDialog.querySelector('.extensions_info');
 
             if (extensionsInfo) {
+                console.debug(`[${EXTENSION_NAME}]`, 'Adding path buttons and sort controls');
                 addPathButtonsToGlobalExtensions();
                 addSortControls();
             }
@@ -66,13 +65,13 @@ observer.observe(document.body, {
     context.saveSettingsDebounced();
 
     await checkAPIAvailable();
-    console.debug(`[${EXTENSION_NAME}]`, t`API available`, isAPIAvailable());
+    console.debug(`[${EXTENSION_NAME}]`, context.t`API available`, isAPIAvailable());
 
     renderExtensionSettings().catch(error => {
-        console.error(`[${EXTENSION_NAME}]`, t`Failed to render settings`, error);
+        console.error(`[${EXTENSION_NAME}]`, context.t`Failed to render settings`, error);
     });
 
     updateNewExtensionButton();
 })().catch(error => {
-    console.error(`[${EXTENSION_NAME}]`, t`Failed to initialize extension`, error);
+    console.error(`[${EXTENSION_NAME}]`, 'Failed to initialize extension', error);
 });

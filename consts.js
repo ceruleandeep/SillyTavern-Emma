@@ -17,4 +17,6 @@ const EDITOR_POPUP_REASONS = {
     API_FAILED: 'api_failed',
 };
 
-export { settingsKey, EXTENSION_NAME, SORT_OPTIONS, DEFAULT_EDITORS, EDITOR_POPUP_REASONS };
+const PLUGIN_INSTALL_URL = 'https://github.com/ceruleandeep/SillyTavern-Emma-Plugin';
+
+export { settingsKey, EXTENSION_NAME, SORT_OPTIONS, DEFAULT_EDITORS, EDITOR_POPUP_REASONS, PLUGIN_INSTALL_URL };

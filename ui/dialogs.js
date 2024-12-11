@@ -1,10 +1,14 @@
 import { createNewExtension } from '../api.js';
 import { loadExtensionSettings } from '../../../../extensions.js';
+import { EXTENSION_NAME } from '../consts.js';
+import { createPluginInstallLink } from './components.js';
 
-function createCopyButton(text, label, tooltip) {
+const t = SillyTavern.getContext().t;
+
+function createCopyButton(text, label) {
     const button = document.createElement('div');
     button.classList.add('menu_button', 'fa-fw', 'fa-solid', 'fa-copy');
-    button.title = tooltip;
+    button.title = label;
     button.setAttribute('aria-label', label);
 
     button.addEventListener('click', async () => {
@@ -13,32 +17,44 @@ function createCopyButton(text, label, tooltip) {
             button.classList.add('emma--success');
             setTimeout(() => button.classList.remove('emma--success'), 3000);
         } catch (error) {
-            console.error('Failed to copy:', error);
-            toastr.error('Failed to copy to clipboard');
+            console.error(`[${EXTENSION_NAME}]`, t`Failed to copy`, error);
+            toastr.error(t`Failed to copy to clipboard`);
         }
     });
 
     return button;
 }
 
-function createContentRow(text, ariaLabel, copyButtonLabel, copyButtonTooltip) {
+function createPopupRow(ariaLabel) {
     const row = document.createElement('div');
     row.classList.add('emma--row');
-    row.setAttribute('aria-label', ariaLabel);
+    ariaLabel && row.setAttribute('aria-label', ariaLabel);
+    return row;
+}
+
+function createCopyableRow(text, ariaLabel, copyButtonLabel) {
+    const row = createPopupRow(ariaLabel);
 
     const textElement = document.createElement('div');
     textElement.textContent = text;
     textElement.classList.add('monospace');
 
-    const copyButton = createCopyButton(text, copyButtonLabel, copyButtonTooltip);
+    const copyButton = createCopyButton(text, copyButtonLabel);
 
     row.append(textElement, copyButton);
     return row;
 }
 
-export async function showExtensionOpenerPopup(fullPath, ideCommand) {
+/**
+ * Show the extension opener popup with the given path and IDE command
+ * @param {string} fullPath
+ * @param {?string} ideCommand
+ * @param reason
+ * @returns {Promise<*>}
+ */
+export async function showExtensionOpenerPopup(fullPath, ideCommand, reason) {
     if (!fullPath) {
-        console.error('Extension path is required');
+        console.error(`[${EXTENSION_NAME}] `, t`'Extension path is required'`);
         return;
     }
 
@@ -47,26 +63,38 @@ export async function showExtensionOpenerPopup(fullPath, ideCommand) {
     container.classList.add('emma--container');
 
     const title = document.createElement('h3');
-    title.textContent = 'Edit Extension';
+    title.textContent = t`Edit Extension`;
     title.classList.add('emma--title');
 
-    const pathRow = createContentRow(
+    const pathRow = createCopyableRow(
         fullPath,
         'Extension path',
         'Copy extension path to clipboard',
-        `Copy extension path: ${fullPath}`,
     );
 
     container.append(title, pathRow);
 
     if (ideCommand) {
-        const commandRow = createContentRow(
+        const commandRow = createCopyableRow(
             ideCommand,
             'Editor command',
             'Copy editor command to clipboard',
             `Copy editor command: ${ideCommand}`,
         );
         container.appendChild(commandRow);
+    }
+
+    // add reason for showing the dialog
+    if (reason) {
+        const reasonRow = createPopupRow();
+        const reasonElement = document.createElement('i');
+        reasonElement.textContent = reason === 'api_not_available' ? t`For one-click opening, install the server plugin.` : t`API failed`;
+        reasonRow.appendChild(reasonElement);
+        reason === 'api_not_available' && reasonRow.appendChild(createPluginInstallLink());
+        container.appendChild(reasonRow);
+        console.debug(`[${EXTENSION_NAME}]`, t`Reason:`, reason);
+    } else {
+        console.debug(`[${EXTENSION_NAME}]`, t`No reason provided for opening extension`);
     }
 
     return context.callGenericPopup(container, context.POPUP_TYPE.TEXT);

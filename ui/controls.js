@@ -1,9 +1,35 @@
 import { showCreateExtensionDialog, showExtensionOpenerPopup } from './dialogs.js';
-import { openExtensionWithAPI, checkAPIAvailable } from '../api.js';
-import { EXTENSION_NAME, settingsKey } from '../consts.js';
+import { openExtensionWithAPI, checkAPIAvailable, isAPIAvailable } from '../api.js';
+import { EXTENSION_NAME, settingsKey, EDITOR_POPUP_REASONS, PLUGIN_INSTALL_URL } from '../consts.js';
 import { createSortControls } from './sort-controls.js';
 
 const t = SillyTavern.getContext().t;
+
+/**
+ *
+ * @param extensionName
+ * @param editor
+ * @param basePath
+ * @param reason
+ * @returns {Promise<void>}
+ */
+async function openExtensionWithLocalPopup(extensionName, editor, basePath, reason) {
+    // Ensure paths are properly formatted
+    basePath = basePath?.trim() || '';
+    const normalizedBase = basePath.endsWith('/') ? basePath : `${basePath}/`;
+    const normalizedName = extensionName.startsWith('/') ? extensionName.slice(1) : extensionName;
+
+    const fullPath = basePath ?
+        `${normalizedBase}${normalizedName}` :
+        `extensions/third-party/${normalizedName}`;
+
+    const indexPath = `${fullPath}/index.js`;
+
+    const ideCommand = editor ? `${editor} "${indexPath}"` : null;
+    console.debug(`[${EXTENSION_NAME}]`, t`openExtensionWithLocalPopup Reason:`, reason);
+
+    await showExtensionOpenerPopup(fullPath, ideCommand, reason);
+}
 
 export async function handleOpenExtension(extensionBlock) {
     if (!extensionBlock) {
@@ -17,22 +43,17 @@ export async function handleOpenExtension(extensionBlock) {
         return;
     }
 
-    const context = SillyTavern.getContext();
     /** @type {import('../index.js').EMMSettings} */
-    const settings = context.extensionSettings[settingsKey];
+    const settings = SillyTavern.getContext().extensionSettings[settingsKey];
     if (!settings) {
         console.error(`[${EXTENSION_NAME}]`, t`Settings not found`);
         return;
     }
 
-    // Ensure paths are properly formatted
-    const basePath = settings.basePath?.trim() || '';
-    const normalizedBase = basePath.endsWith('/') ? basePath : `${basePath}/`;
-    const normalizedName = extensionName.startsWith('/') ? extensionName.slice(1) : extensionName;
-
-    const fullPath = basePath ?
-        `${normalizedBase}${normalizedName}` :
-        `extensions/third-party/${normalizedName}`;
+    if (!isAPIAvailable()) {
+        await openExtensionWithLocalPopup(extensionName, settings.editor, settings.basePath, EDITOR_POPUP_REASONS.API_NOT_AVAILABLE);
+        return;
+    }
 
     try {
         if (!settings.editor) {
@@ -41,7 +62,7 @@ export async function handleOpenExtension(extensionBlock) {
         await openExtensionWithAPI(extensionName, settings.editor);
     } catch (error) {
         console.debug(`[${EXTENSION_NAME}]`, t`API not available, falling back to popup`, error);
-        await showExtensionOpenerPopup(fullPath);
+        await openExtensionWithLocalPopup(extensionName, settings.editor, settings.basePath, EDITOR_POPUP_REASONS.API_FAILED);
     }
 }
 
