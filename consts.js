@@ -12,4 +12,9 @@ const SORT_OPTIONS = {
     UPDATE: 'update',
 };
 
-export { settingsKey, EXTENSION_NAME, SORT_OPTIONS, DEFAULT_EDITORS };
+const EDITOR_POPUP_REASONS = {
+    API_NOT_AVAILABLE: 'api_not_available',
+    API_FAILED: 'api_failed',
+};
+
+export { settingsKey, EXTENSION_NAME, SORT_OPTIONS, DEFAULT_EDITORS, EDITOR_POPUP_REASONS };
