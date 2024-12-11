@@ -1,5 +1,5 @@
 import { settingsKey, EXTENSION_NAME } from './consts.js';
-import { checkAPIAvailable } from './api.js';
+import { checkAPIAvailable, isAPIAvailable } from './api.js';
 import { renderExtensionSettings } from './ui/settings.js';
 import { addPathButtonsToGlobalExtensions, addSortControls, updateNewExtensionButton } from './ui/controls.js';
 

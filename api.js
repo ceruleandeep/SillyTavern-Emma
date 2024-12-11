@@ -9,29 +9,6 @@ export function isAPIAvailable() {
     return apiAvailable;
 }
 
-export async function getEditorsList() {
-    const context = SillyTavern.getContext();
-    
-    if (!apiAvailable) {
-        return DEFAULT_EDITORS;
-    }
-
-    try {
-        const response = await fetch('/api/plugins/emma/editors', {
-            headers: context.getRequestHeaders()
-        });
-        
-        if (!response.ok) {
-            throw new Error('Failed to fetch editors');
-        }
-
-        return await response.json();
-    } catch (error) {
-        console.debug(`[${EXTENSION_NAME}]`, t`Failed to fetch editors`, error);
-        throw error;
-    }
-}
-
 export async function checkAPIAvailable() {
     apiAvailable = await probeAPI();
     return apiAvailable;
@@ -48,6 +25,25 @@ async function probeAPI() {
     } catch (error) {
         console.debug(`[${EXTENSION_NAME}]`, t`API probe failed`, error);
         return false;
+    }
+}
+
+export async function getEditorsList() {
+    const context = SillyTavern.getContext();
+
+    try {
+        const response = await fetch('/api/plugins/emma/editors', {
+            headers: context.getRequestHeaders(),
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch editors');
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.debug(`[${EXTENSION_NAME}]`, t`Failed to fetch editors`, error);
+        throw error;
     }
 }
 
