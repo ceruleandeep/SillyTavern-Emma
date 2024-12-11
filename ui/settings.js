@@ -1,4 +1,4 @@
-import { settingsKey, EXTENSION_NAME } from '../consts.js';
+import { settingsKey, EXTENSION_NAME, DEFAULT_EDITORS } from '../consts.js';
 import { addPathButtonsToGlobalExtensions, updateNewExtensionButton } from './controls.js';
 
 function createInlineDrawer(context) {
@@ -61,6 +61,10 @@ async function createEditorSelection(context, settings) {
     editorLabel.textContent = context.t`Editor`;
     editorContainer.appendChild(editorLabel);
 
+    const editorSelect = document.createElement('select');
+    editorSelect.id = `${settingsKey}-editor`;
+    editorSelect.classList.add('text_pole');
+
     try {
         const response = await fetch('/api/plugins/emma/editors');
         if (!response.ok) {
@@ -68,10 +72,6 @@ async function createEditorSelection(context, settings) {
         }
 
         const editors = await response.json();
-        const editorSelect = document.createElement('select');
-        editorSelect.id = `${settingsKey}-editor`;
-        editorSelect.classList.add('text_pole');
-
         editors.forEach(editor => {
             const option = document.createElement('option');
             option.value = editor;
@@ -88,10 +88,22 @@ async function createEditorSelection(context, settings) {
         editorContainer.appendChild(editorSelect);
     } catch (error) {
         console.debug(`[${EXTENSION_NAME}]`, context.t`Failed to fetch editors`, error);
+        
+        // Use default editors list
+        DEFAULT_EDITORS.forEach(editor => {
+            const option = document.createElement('option');
+            option.value = editor;
+            option.textContent = editor;
+            option.selected = settings.editor === editor;
+            editorSelect.appendChild(option);
+        });
+
+        // Still show the warning about API being unreachable
         const message = document.createElement('div');
         message.classList.add('warning');
-        message.textContent = context.t`Editor selection unavailable - API unreachable`;
-        editorContainer.appendChild(message);
+        message.textContent = context.t`Editor API unreachable - using default editor list`;
+        editorContainer.append(editorSelect, message);
+        return editorContainer;
     }
 
     return editorContainer;
