@@ -1,4 +1,4 @@
-import { settingsKey, EXTENSION_NAME } from '../consts.js';
+import { settingsKey, EXTENSION_NAME, DEFAULT_EDITORS } from '../consts.js';
 import { addPathButtonsToGlobalExtensions, updateNewExtensionButton } from './controls.js';
 import { getEditorsList, isAPIAvailable } from '../api.js';
 
@@ -59,7 +59,7 @@ async function createEditorSelection(context, settings) {
 
     const editorLabel = document.createElement('label');
     editorLabel.htmlFor = `${settingsKey}-editor`;
-    editorLabel.textContent = context.t`Editor`;
+    editorLabel.textContent = isAPIAvailable() ? context.t`Editor` : context.t`Editor (API unavailable)`;
     editorContainer.appendChild(editorLabel);
 
     const editorSelect = document.createElement('select');
@@ -67,8 +67,8 @@ async function createEditorSelection(context, settings) {
     editorSelect.classList.add('text_pole');
 
     try {
-        const editors = await getEditorsList();
-        
+        const editors = isAPIAvailable() ? await getEditorsList() : DEFAULT_EDITORS;
+
         editors.forEach(editor => {
             const option = document.createElement('option');
             option.value = editor;
@@ -83,14 +83,6 @@ async function createEditorSelection(context, settings) {
         });
 
         editorContainer.appendChild(editorSelect);
-
-        // Only show warning if API was available but failed
-        if (isAPIAvailable()) {
-            const message = document.createElement('div');
-            message.classList.add('warning');
-            message.textContent = context.t`Editor API unreachable - using default editor list`;
-            editorContainer.appendChild(message);
-        }
     } catch (error) {
         console.error(`[${EXTENSION_NAME}]`, context.t`Failed to get editors list`, error);
         const message = document.createElement('div');
