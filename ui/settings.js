@@ -164,4 +164,27 @@ export async function renderExtensionSettings() {
 
     // Add base path input
     isAPIAvailable() || inlineDrawerContent.appendChild(createBasePathInput(context, settings));
+
+    // Add Github username input
+    const githubContainer = document.createElement('div');
+    githubContainer.classList.add('marginTopBot5');
+
+    const githubLabel = document.createElement('label');
+    githubLabel.htmlFor = `${settingsKey}-github`;
+    githubLabel.textContent = context.t`Github Username`;
+
+    const githubInput = document.createElement('input');
+    githubInput.type = 'text';
+    githubInput.id = `${settingsKey}-github`;
+    githubInput.classList.add('text_pole');
+    githubInput.value = settings.githubUsername || '';
+    githubInput.placeholder = 'username';
+
+    githubInput.addEventListener('input', () => {
+        settings.githubUsername = githubInput.value || null;
+        context.saveSettingsDebounced();
+    });
+
+    githubContainer.append(githubLabel, githubInput);
+    inlineDrawerContent.appendChild(githubContainer);
 }

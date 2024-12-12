@@ -10,12 +10,14 @@ import { addPathButtonsToGlobalExtensions, addSortControls, updateNewExtensionBu
  * @property {string} basePath The base path for third-party extensions
  * @property {string} editor The default editor to open extensions with
  * @property {string} sortOrder Last-used sort order for extensions
+ * @property {string|null} githubUsername Github username for repository operations
  */
 const defaultSettings = Object.freeze({
     enabled: true,
     basePath: '',
     editor: 'code', // Default to VS Code
     sortOrder: 'load', // Default to load order
+    githubUsername: null,
 });
 
 // Set up observer to watch for extensions dialog
