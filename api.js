@@ -1,6 +1,6 @@
 // API related functions
 
-import { EXTENSION_NAME } from './consts.js';
+import { EXTENSION_NAME, settingsKey } from './consts.js';
 const t = SillyTavern.getContext().t;
 
 let apiAvailable = false;
@@ -79,6 +79,7 @@ export async function openExtensionWithAPI(extensionName, editor) {
 
 export async function createNewExtension(name, displayName, author, email) {
     const context = SillyTavern.getContext();
+    const settings = context.extensionSettings[settingsKey];
 
     try {
         const response = await fetch('/api/plugins/emma/create', {
@@ -89,6 +90,7 @@ export async function createNewExtension(name, displayName, author, email) {
                 display_name: displayName,
                 author,
                 email,
+                githubUsername: settings.githubUsername || undefined,
             }),
         });
 
