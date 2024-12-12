@@ -121,19 +121,22 @@ export function addPathButtonsToGlobalExtensions() {
 export function updateNewExtensionButton() {
     const context = SillyTavern.getContext();
     const settings = context.extensionSettings[settingsKey];
-    const extensionsBlock = document.querySelector('#rm_extensions_block .extensions_block div');
+    const extensionsBlock = document.querySelector('#rm_extensions_block .extensions_block');
+    const extensionsBlockContainer = document.querySelector('#rm_extensions_block .extensions_block div');
     const existingButton = document.querySelector('#emma_new_extension_button');
 
-    if (existingButton) {
-        existingButton.remove();
-    }
+    existingButton && existingButton.remove();
+    extensionsBlock && extensionsBlock.classList.remove('emma--elide');
 
-    if (settings.enabled && checkAPIAvailable() && extensionsBlock) {
+    if (settings.enabled && checkAPIAvailable() && extensionsBlockContainer) {
         const newButton = document.createElement('div');
         newButton.id = 'emma_new_extension_button';
         newButton.className = 'menu_button menu_button_icon';
         newButton.innerHTML = '<i class="fa-solid fa-cube fa-fw"></i><span>New extension</span>';
         newButton.addEventListener('click', showCreateExtensionDialog);
-        extensionsBlock.appendChild(newButton);
+        extensionsBlockContainer.appendChild(newButton);
+
+        // Add class to make all controls fit in one row
+        extensionsBlock.classList.add('emma--elide');
     }
 }
