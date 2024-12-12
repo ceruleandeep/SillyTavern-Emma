@@ -28,7 +28,6 @@ const observer = new MutationObserver((mutations) => {
         );
 
         if (addedDialog) {
-            console.debug(`[${EXTENSION_NAME}]`, 'Found extensions dialog');
             const extensionsInfo = addedDialog.classList?.contains('extensions_info') ?
                 addedDialog :
                 addedDialog.querySelector('.extensions_info');
