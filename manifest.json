@@ -6,7 +6,7 @@
     "js": "index.js",
     "css": "emma.css",
     "author": "ceruleandeep",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "homePage": "https://github.com/ceruleandeep/SillyTavern-Emma",
     "auto_update": true
 }

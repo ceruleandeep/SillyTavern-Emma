@@ -10,9 +10,10 @@ Create new [UI extensions](https://docs.sillytavern.app/for-contributors/writing
 
 ## Real features
 
-* Create a new local extension
-* Open the extension for editing in your IDE with a single click!
-* Sort the installed extensions list
+* Creates new local extensions
+* Adds some starter code to the extension
+* Opens the extension for editing in your IDE with a single click!
+* Sorts the installed extensions list in various ways
 
 ## Imaginary features
 
@@ -29,6 +30,8 @@ Find "Emma" in the extensions panel.
 
 * Enabled: whether Emma is enabled.
 * Editor: the shell command that launches your IDE.
+* GitHub username: your GitHub username, if any. Used to set the `homePage` field in the extension's manifest so that 
+  when the time comes, you can publish your extension.
 * Extensions Base Path: the path to the `scripts/extensions/third-party` directory in your SillyTavern installation. Only used for the "no auto-open" fallback.
 
 <img width="400" alt="emma-config" src="https://github.com/user-attachments/assets/70a5aa8a-4932-492c-98d0-28c38dedd2ed">
@@ -65,8 +68,6 @@ to [also be installed](https://docs.sillytavern.app/for-contributors/server-plug
 ### Just Webstorm Things
 
 * For the love of gods, edit your extension by opening the main SillyTavern directory in Webstorm, not the extension directory.
-* Use `webstorm "{path}/index.js"` to open the extension's main file inside an existing Webstorm window.
-* Use `webstorm "{path}"` to open the extension in a new Webstorm window, whether or not Webstorm is already open.
 * If you don't have `webstorm` in your path, they moved that configuration into Toolbox, go look there.
 * Register your extension as a VCS root in Webstorm to enable version control features (Settings -> Version Control -> Directory Mappings, find the unregistered root, click +).
 
