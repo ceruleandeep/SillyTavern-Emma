@@ -1,6 +1,6 @@
 // API related functions
 
-import { EXTENSION_NAME, DEFAULT_EDITORS } from './consts.js';
+import { EXTENSION_NAME } from './consts.js';
 const t = SillyTavern.getContext().t;
 
 let apiAvailable = false;
