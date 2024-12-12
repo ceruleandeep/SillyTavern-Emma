@@ -47,6 +47,14 @@ export async function getEditorsList() {
     }
 }
 
+function tryParse(errorText) {
+    try {
+        return JSON.parse(errorText);
+    } catch (parseError) {
+        return undefined;
+    }
+}
+
 export async function openExtensionWithAPI(extensionName, editor) {
     const context = SillyTavern.getContext();
     const response = await fetch('/api/plugins/emma/open', {
@@ -60,10 +68,11 @@ export async function openExtensionWithAPI(extensionName, editor) {
 
     if (!response.ok) {
         // Try to get error details from response
-        const errorData = await response.json();
-        if (errorData.error && errorData.details) {
-            toastr.error(`${errorData.error}: ${errorData.details}`);
-        }
+        const errorText = await response.text();
+        const errorData = tryParse(errorText);
+        const title = errorData?.error || t`Failed to open extension`;
+        const message = errorData?.details || errorText;
+        toastr.error(message, title);
         throw new Error('API call failed');
     }
 }

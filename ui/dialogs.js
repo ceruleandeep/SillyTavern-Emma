@@ -88,7 +88,9 @@ export async function showExtensionOpenerPopup(fullPath, ideCommand, reason) {
     if (reason) {
         const reasonRow = createPopupRow();
         const reasonElement = document.createElement('i');
-        reasonElement.textContent = reason === 'api_not_available' ? t`For one-click opening, install the server plugin.` : t`API failed`;
+        reasonElement.textContent = reason === 'api_not_available'
+            ? t`For one-click opening, install the server plugin.`
+            : t`Could not open extension with API`;
         reasonRow.appendChild(reasonElement);
         reason === 'api_not_available' && reasonRow.appendChild(createPluginInstallLink());
         container.appendChild(reasonRow);
