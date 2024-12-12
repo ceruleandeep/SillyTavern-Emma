@@ -1,6 +1,14 @@
 import { sortExtensionsByName, sortExtensionsByEnabled, sortExtensionsByUpdate } from '../utils/sort.js';
 import { settingsKey, SORT_OPTIONS } from '../consts.js';
 
+/**
+ * Create the sort controls for the extensions dialog
+ * TODO: get the default extension order from core UI
+ * TODO: if sorting by update available, re-sort as updates are checked
+ * TODO: refactor control labels into constants and use i18n
+ *
+ * @returns {HTMLDivElement}
+ */
 export function createSortControls() {
     const context = SillyTavern.getContext();
     const settings = context.extensionSettings[settingsKey];
