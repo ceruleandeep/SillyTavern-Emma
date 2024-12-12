@@ -1,0 +1,81 @@
+.emma--sort-controls {
+  margin: 10px 0;
+  text-align: right;
+}
+.emma--sort-controls select {
+  margin-left: 5px;
+  min-width: 120px;
+}
+.emma--container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.emma--container .monospace {
+  text-align: left;
+}
+.emma--title {
+  text-align: center;
+  margin-bottom: 10px;
+}
+.emma--row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 0.5em;
+}
+@keyframes success {
+  0%,
+  100% {
+    color: var(--SmartThemeBodyColor);
+  }
+  25%,
+  75% {
+    color: #51a351;
+  }
+}
+.emma--success {
+  animation: success 3s linear;
+}
+.emma--elide.extensions_block {
+  /* Make buttons shrink if needed */
+  /* Handle text overflow in buttons */
+  /* If you want to ensure the h3 doesn't shrink too much */
+  /* For the checkbox label */
+}
+.emma--elide.extensions_block .flex-container {
+  flex-wrap: nowrap;
+  /* Prevent wrapping to new line */
+  overflow: hidden;
+  /* Contains everything */
+}
+.emma--elide.extensions_block .menu_button {
+  flex-shrink: 1;
+  min-width: 0;
+  /* Allows shrinking below content size */
+  white-space: nowrap;
+  /* Keeps text in single line */
+}
+.emma--elide.extensions_block .menu_button_icon span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.emma--elide.extensions_block .flex-container h3 {
+  flex-shrink: 0;
+  margin-right: 10px;
+}
+.emma--elide.extensions_block label {
+  flex-shrink: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.emma--elide.extensions_block label span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/*# sourceMappingURL=emma.css.map */
