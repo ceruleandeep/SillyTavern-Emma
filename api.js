@@ -93,25 +93,19 @@ export async function createNewExtension(name, displayName, author, email) {
         });
 
         if (!response.ok) {
-            try {
-                const errorData = await response.json();
-                if (errorData.error) {
-                    toastr.error(errorData.error);
-                    return;
-                }
-            } catch (parseError) {
-                console.debug(`[${EXTENSION_NAME}]`, t`Failed to parse error response`, parseError);
-            }
-            toastr.error(t`Failed to create extension`);
+            const errorText = await response.text();
+            const errorData = tryParse(errorText);
+            const title = errorData?.error || t`Failed to create extension`;
+            const message = errorData?.details || errorText;
+            toastr.error(message, title);
             return;
         }
 
-        const manifest = await response.json();
+        const { path, manifestData } = await response.json();
+        toastr.success(t`New extension "${manifestData.display_name}" awaits, ${manifestData.author}`, t`Extension creation successful`);
+        console.debug(`[${EXTENSION_NAME}]`, t`Extension "${manifestData.display_name}" installed at ${path}`);
 
-        toastr.success(t`Extension "${manifest.display_name}" by ${manifest.author} (version ${manifest.version}) has been created successfully!`, t`Extension creation successful`);
-        console.debug(`[${EXTENSION_NAME}]`, t`Extension "${manifest.display_name}" installed at ${manifest.extensionPath}`);
-
-        return manifest;
+        return manifestData;
     } catch (error) {
         console.error(`[${EXTENSION_NAME}]`, t`Failed to create extension`, error);
         toastr.error(t`Failed to create extension`);
